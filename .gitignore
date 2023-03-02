@@ -1,0 +1,9 @@
+# Build artifacts
+*.o
+maze_explorer
+
+# Editor backups
+*~
+
+# IDE directories
+.vscode/
