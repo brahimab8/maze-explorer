@@ -1,15 +1,24 @@
-// settings.h
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include "config.h"
+
+
+typedef struct {
+    const char *name;
+    int  *value_ptr;
+    bool (*setter)(int newval);
+    int   min, max;
+} SettingDesc;
 
 // Runtime‐modifiable settings snapshot
 typedef struct {
     int width;          // [MAZE_MIN_SIZE, MAZE_MAX_SIZE]
     int height;         // [MAZE_MIN_SIZE, MAZE_MAX_SIZE]
     int initial_shots;  // starting bullets
+    int fps;
 } GameSettings;
 
 // Get current settings
@@ -19,5 +28,10 @@ void settings_get(GameSettings *out);
 bool settings_set_width(int w);
 bool settings_set_height(int h);
 bool settings_set_initial_shots(int n);
+bool settings_set_fps(int f);
+
+// Accessors for the metadata
+const SettingDesc *settings_descriptors(void);
+size_t settings_descriptor_count(void);
 
 #endif // SETTINGS_H

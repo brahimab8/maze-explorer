@@ -73,9 +73,9 @@ void input_get_line(const char *prompt, char *buf, size_t buflen) {
     raw.c_lflag |= ICANON | ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &raw);
 
+    // Prompt + read
     printf("%s", prompt);
     fflush(stdout);
-
     if (fgets(buf, buflen, stdin)) {
         size_t len = strlen(buf);
         if (len && buf[len-1] == '\n') buf[len-1] = '\0';
@@ -83,6 +83,10 @@ void input_get_line(const char *prompt, char *buf, size_t buflen) {
         buf[0] = '\0';
     }
 
-    // Restore raw
-    tcsetattr(STDIN_FILENO, TCSANOW, &cooked);
+    // Flush any extra keystrokes (e.g. leftover newline)
+    tcflush(STDIN_FILENO, TCIFLUSH);
+
+    // Re-enter raw, non-blocking, no-echo mode
+    // (this will restore orig_termios & rewire VMIN/VTIME)
+    input_init();
 }

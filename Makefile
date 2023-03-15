@@ -1,29 +1,51 @@
+# Top‐level Makefile
+
+# Compiler settings
 CC       := gcc
 CFLAGS   := -std=gnu11 -Wall -Wextra -g
-TARGET   := maze_explorer
-
-SRCDIR   := src
 INCDIR   := include
-BUILDDIR := build
 
-SRC      := $(wildcard $(SRCDIR)/*.c)
-OBJ      := $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(SRC))
+# Source layout
+SRCDIR    := src
+BUILDDIR  := build
+TARGET    := maze_explorer
 
-.PHONY: all clean
+# All library sources = everything under src except main.c
+LIB_SRCS  := $(filter-out $(SRCDIR)/main.c,$(wildcard $(SRCDIR)/*.c))
+LIB_OBJS  := $(patsubst $(SRCDIR)/%.c,$(BUILDDIR)/%.o,$(LIB_SRCS))
+MAIN_OBJ  := $(BUILDDIR)/main.o
+
+.PHONY: all test clean coverage
 
 all: $(BUILDDIR) $(TARGET)
 
-# Link step
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) -I$(INCDIR) -o $@ $^
+$(BUILDDIR):
+	mkdir -p $@
 
-# Compile .c -> .o into build/
+# compile library .c → .o
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
 
-# Create build directory if missing
-$(BUILDDIR):
-	mkdir -p $(BUILDDIR)
+# compile main.c
+$(MAIN_OBJ): $(SRCDIR)/main.c | $(BUILDDIR)
+	$(CC) $(CFLAGS) -I$(INCDIR) -c $< -o $@
 
+# link final executable
+$(TARGET): $(LIB_OBJS) $(MAIN_OBJ)
+	$(CC) $(CFLAGS) -I$(INCDIR) -o $@ $^
+
+# Coverage 
+.PHONY: coverage
+coverage:
+	@./scripts/coverage.sh
+
+# Clean only the core build
+.PHONY: clean
 clean:
-	rm -rf $(BUILDDIR) $(TARGET)
+	rm -rf $(BUILDDIR) $(TARGET) coverage-report coverage.info
+
+# Build library first, then run tests under test/
+.PHONY: test
+test: all
+	@echo "Library built; now running CMocka tests…"
+	$(MAKE) -C test test
