@@ -1,0 +1,98 @@
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#include "menu.h"
+#include "load_menu.h"
+#include "save_game.h"
+#include "settings_menu.h"
+#include "input.h"
+#include "maze.h"
+
+#include "maze_ui.h"
+#include "config.h"
+#include "settings.h"
+#include "game.h"
+#include "ui.h"
+
+// Shared stub state for run_menu
+int menu_calls = 0;
+static int  _next_choice = 0;
+static char *_next_slot   = NULL;
+
+void set_next_menu_choice(int c)       { _next_choice = c; }
+void set_next_load_slot(const char *s)  { _next_slot   = (char*)s; }
+
+//---Wrappers -----------------------------------------------------
+int __wrap_run_menu(const char *t,const char*lbls[],int cnt) {
+    (void)t;(void)lbls;(void)cnt;
+    menu_calls++;
+    return _next_choice;
+}
+
+char* __wrap_run_load_menu(void){
+    return _next_slot ? strdup(_next_slot) : NULL;
+}
+
+bool __wrap_load_game_slot(const char *slot,
+                           MazeUI *ui,int *r,int *c,double *e){
+    (void)slot;
+    ui->level     = 2;
+    ui->bullets   = 5;
+    *r            = 8;
+    *c            = 9;
+    *e            = 1.23;
+    return true;
+}
+
+bool __wrap_save_game_slot(const char*slot,
+                           const MazeUI*ui,int r,int c,double e){
+    (void)slot; (void)ui; (void)r; (void)c; (void)e;
+    return true;
+}
+
+void __wrap_draw_maze(Cell **grid,
+                      int rows,
+                      int cols,
+                      const MazeUI *ui)
+{
+    (void)grid; (void)rows; (void)cols; (void)ui;
+    /* no-op */
+}
+
+void __wrap_free_maze(Cell **g){ (void)g; }
+void __wrap_run_settings_menu(void){ }
+void __wrap_input_init(void){ }
+InputAction __wrap_input_poll(void){ return INP_SELECT; }
+void __wrap_input_get_line(const char*p,char*b,size_t l){
+    (void)p;(void)l; b[0]='\0';
+}
+
+
+//---Stub out game_init so frame_delay_ms never divides by zero
+void __wrap_game_init(GameContext *g,
+                      const GameSettings *initial_cfg,
+                      UI *ui)
+{
+    (void)ui;
+    // Copy over the provided initial_cfg
+    g->cfg = *initial_cfg;
+
+    // Compute frame_delay_ms safely
+    int fps = g->cfg.fps;
+    if (fps < MIN_FPS || fps > MAX_FPS) {
+        fps = DEFAULT_FPS;
+    }
+    g->frame_delay_ms = 1000 / fps;
+
+    // Initialize MazeUI to sane defaults
+    g->maze.level     = 1;
+    g->maze.bullets   = g->cfg.initial_shots;
+    g->maze.time_secs = 0.0;
+
+    // No maze built yet
+    g->grid = NULL;
+
+    // Provide a dummy slot name
+    g->slot = strdup("stub");
+}
