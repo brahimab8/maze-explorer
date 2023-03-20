@@ -6,12 +6,10 @@ maze_explorer
 /test/bin/
 # IDE directories
 .vscode/
-/run_*_cmocka
 
 # Coverage files
 /coverage.info
 /coverage-report/
-/build-coverage/
-/coverage/
-/run_tests
+*.gcda
+*.gcno
 

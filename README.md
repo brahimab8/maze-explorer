@@ -10,8 +10,8 @@ Maze Explorer is a terminal‑based C application: navigate a procedurally gener
 4. Monster Movement  
 5. Level Progression & Save/Load  
 6. Timing & Best‑time Tracking
-8. Persistent Configuration 
-7. Unit Testing & Coverage
+7. Persistent Configuration 
+8. Unit Testing & Coverage
 
 ---
 
@@ -23,7 +23,7 @@ Maze Explorer is a terminal‑based C application: navigate a procedurally gener
 - **I/O**: Console & file  
 - **Timing**: Sub‑second precision  
 - **Tests**: CMocka  
-- **Coverage**: lcov + genhtml via `scripts/coverage.sh`
+- **Coverage**: lcov + genhtml via `make coverage`
 
 ---
 
@@ -44,12 +44,13 @@ make test
 ```
 
 ## Generating Coverage Reports
+This will rebuild both the library and tests with coverage instrumentation, run all tests, then generate an HTML report in coverage-report/:
 
 ```bash
 make coverage
 ```
 
-Coverage-Report: coverage-report/index.html
+Open coverage-report/index.html in the browser to inspect the coverage results.
 
 ---
 

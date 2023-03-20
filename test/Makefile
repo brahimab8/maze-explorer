@@ -1,50 +1,63 @@
 # test/Makefile
 
+# =============================================================================
+# Compiler settings & coverage switch
+# =============================================================================
 CC       := gcc
 CFLAGS   := -std=gnu11 -Wall -Wextra -g -I../include
+LDFLAGS  :=
+
+# When COVERAGE=1 is set, instrument test code
+ifdef COVERAGE
+  CFLAGS  += --coverage
+  LDFLAGS += --coverage
+endif
+
 CMOCKA   := -lcmocka
 BINDIR   := bin
 
-# build the one stubs.o
+.PHONY: all test clean
+
+# Build stubs.o
 STUB_OBJ := $(BINDIR)/stubs.o
 $(STUB_OBJ): stubs.c | $(BINDIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -Itest -c $< -o $@
 
-# grab everything in ../build except main.o
-CORE_OBJS := $(filter-out ../build/main.o,$(wildcard ../build/*.o))
+# Gather library objects (all .o under ../build, except main.o)
+CORE_OBJS := $(filter-out ../build/main.o, \
+              $(shell find ../build -type f -name '*.o'))
 
-# wrap the stubs we always need
-WRAP := -Wl,--wrap=run_menu   \
-        -Wl,--wrap=run_load_menu \
-        -Wl,--wrap=load_game_slot \
-        -Wl,--wrap=save_game_slot \
-        -Wl,--wrap=run_settings_menu \
-        -Wl,--wrap=input_init \
-        -Wl,--wrap=input_poll \
-        -Wl,--wrap=input_get_line \
-        -Wl,--wrap=free_maze
+# Wrapping flags for stubbing out real game/menu calls
+WRAP := \
+  -Wl,--wrap=run_menu   \
+  -Wl,--wrap=run_load_menu \
+  -Wl,--wrap=load_game_slot \
+  -Wl,--wrap=save_game_slot \
+  -Wl,--wrap=run_settings_menu \
+  -Wl,--wrap=input_init \
+  -Wl,--wrap=input_poll \
+  -Wl,--wrap=input_get_line \
+  -Wl,--wrap=free_maze
 
-# list of all tests that exercise game_play
-GAME_PLAY_TESTS := \
-    game_init_cmocka \
-    game_loop_cmocka \
-    game_menu_cmocka \
-    maze_cmocka \
-    settings_cmocka \
-    timer_cmocka
+# Tests exercising game_play also need draw_maze wrapped
+GAME_PLAY := \
+  game_init_cmocka \
+  game_loop_cmocka \
+  game_menu_cmocka \
+  maze_cmocka \
+  settings_cmocka \
+  timer_cmocka
 
-# for those tests, wrap out draw_maze
-$(addprefix $(BINDIR)/,$(GAME_PLAY_TESTS)): WRAP += -Wl,--wrap=draw_maze
+$(addprefix $(BINDIR)/,$(GAME_PLAY)): WRAP += -Wl,--wrap=draw_maze
 
-# for the game_loop test, wrap out game_init (to avoid divide-by-zero)
+# game_loop also wraps game_init
 $(BINDIR)/game_loop_cmocka: WRAP += -Wl,--wrap=game_init
 
-# auto‐discover any *_cmocka.c and map to bin/
+# Discover test sources → binaries
 TEST_SRCS := $(wildcard *_cmocka.c)
 TEST_BINS := $(patsubst %.c,$(BINDIR)/%,$(TEST_SRCS))
 
-.PHONY: all test clean
-all: $(TEST_BINS)
+all: $(STUB_OBJ) $(TEST_BINS)
 
 test: all
 	@echo "Running all CMocka tests…"
@@ -54,15 +67,15 @@ test: all
 	done
 	@echo "All tests passed!"
 
-clean:
-	rm -rf $(BINDIR)
-
-# pattern‐rule for every test driver; pulls in CORE_OBJS and the right WRAP
+# Pattern rule to build each test binary
 $(BINDIR)/%: %.c $(STUB_OBJ) $(CORE_OBJS) | $(BINDIR)
-	$(CC) $(CFLAGS) \
-	    $< $(STUB_OBJ) $(CORE_OBJS) \
-	    $(WRAP) $(CMOCKA) \
-		-o $@
+	$(CC) $(CFLAGS) $< $(STUB_OBJ) $(CORE_OBJS) \
+	    $(WRAP) $(LDFLAGS) $(CMOCKA) \
+	    -o $@
+
+# Clean up test artifacts
+clean:
+	rm -rf $(BINDIR) coverage.info
 
 $(BINDIR):
 	mkdir -p $@
