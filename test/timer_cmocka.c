@@ -3,9 +3,10 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "timer.h"
 #include <unistd.h>
 #include <math.h>
+
+#include "util/timer.h"
 
 // Helper for “approximately equal”
 static void assert_near(double got, double want, double tol) {

@@ -3,7 +3,7 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include "settings.h"
+#include "settings/settings.h"
 
 // --- Test cases ---------------------------------------------------------
 static void test_defaults(void **state) {

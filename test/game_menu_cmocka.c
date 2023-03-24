@@ -6,11 +6,11 @@
 #include <stdio.h>
 #include <cmocka.h>
 
-#include "game.h"
-#include "ui.h"
-#include "main_menu.h"     /* for MAIN_CONTINUE, MAIN_NEW, etc. */
-#include "input.h"         /* for InputAction, INP_SELECT */
-#include "save_game.h"     /* for save_game_slot() */
+#include "game/game.h"
+#include "ui/ui.h"
+#include "menu/main_menu.h"     /* for MAIN_CONTINUE, MAIN_NEW, etc. */
+#include "input/input.h"         /* for InputAction, INP_SELECT */
+#include "util/save_game.h"     /* for save_game_slot() */
 
 /* Wrapper implementations from stubs.c */
 extern int  __wrap_run_menu(const char *title, const char *labels[], int count);

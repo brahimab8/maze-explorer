@@ -5,11 +5,11 @@
 #include <string.h>
 #include <cmocka.h>
 
-#include "game.h"
-#include "ui.h"
-#include "input.h"
+#include "game/game.h"
+#include "ui/ui.h"
+#include "input/input.h"
 #include "config.h"
-#include "pause_menu.h"
+#include "menu/pause_menu.h"
 
 //--- Fake UI callbacks --------------------------------------------------
 static void stub_seed_rng(unsigned s) {

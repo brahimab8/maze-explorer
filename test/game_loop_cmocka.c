@@ -5,9 +5,9 @@
 #include <string.h>
 #include <cmocka.h>
 
-#include "game.h"
-#include "input.h"
-#include "ui.h"
+#include "game/game.h"
+#include "input/input.h"
+#include "ui/ui.h"
 
 /* pull in shared stubs & wrappers from stubs.c */
 extern void   set_next_menu_choice(int choice);

@@ -2,18 +2,28 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "menu.h"
-#include "load_menu.h"
-#include "save_game.h"
-#include "settings_menu.h"
-#include "input.h"
-#include "maze.h"
+/* Menu widgets */
+#include "menu/menu.h"               // run_menu()
+#include "menu/load_menu.h"          // run_load_menu_ui()
+#include "menu/settings_menu.h"      // run_settings_menu_ui()
 
-#include "maze_ui.h"
-#include "config.h"
-#include "settings.h"
-#include "game.h"
-#include "ui.h"
+/* Persistence */
+#include "util/save_game.h"   // save_game_slot(), load_game_slot()
+
+/* Input */
+#include "input/input.h"             // input_poll(), input_get_line()
+
+/* Engine & UI */
+#include "engine/maze.h"             // Cell, free_maze()
+#include "ui/maze_ui.h"              // MazeUI
+#include "ui/ui.h"                   // UI
+
+/* Configuration & settings */
+#include "config.h"                  // global config
+#include "settings/settings.h"       // GameSettings
+
+/* Game logic */
+#include "game/game.h"               // GameContext, GameState
 
 // Shared stub state for run_menu
 int menu_calls = 0;

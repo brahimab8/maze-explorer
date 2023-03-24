@@ -8,8 +8,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "maze.h"
-#include "maze_ui.h"
+#include "engine/maze.h"
+#include "ui/maze_ui.h"
 
 // ----------------------------------------------------------------------------
 // Helper: capture stdout from draw_maze()

@@ -2,10 +2,10 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-
-#include "maze.h"
 #include <stdlib.h>
 #include <time.h>
+
+#include "engine/maze.h"
 
 //------- Helpers (flood‐fill and wall‐count) --------------------
 static int flood_count(Cell **grid, int rows, int cols, int r, int c, char *seen) {
