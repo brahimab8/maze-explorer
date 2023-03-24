@@ -41,11 +41,7 @@ GameState game_menu(GameContext *g, UI *ui)
     return STATE_PLAY_LEVEL;
 
   case MAIN_NEW:
-    if (g->grid)
-    {
-      free_maze(g->grid);
-      g->grid = NULL;
-    }
+    game_clear_grid(g);
     g->maze.level = 1;
     g->maze.time_secs = 0.0;
     ui->save_slot(g->slot,
@@ -77,11 +73,7 @@ GameState game_menu(GameContext *g, UI *ui)
     settings_get(&g->cfg);
     g->frame_delay_ms = 1000 / g->cfg.fps;
 
-    if (g->grid)
-    {
-      free_maze(g->grid);
-      g->grid = NULL;
-    }
+    game_clear_grid(g);
     ui->save_slot(g->slot,
                   &g->maze,
                   g->cfg.height,

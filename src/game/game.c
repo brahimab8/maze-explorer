@@ -7,20 +7,7 @@
 
 static GameState setup_level(GameContext *g, UI *ui) {
     (void)ui;   // silence “unused parameter” warning
-
-    if (g->grid) {
-        free_maze(g->grid);
-        g->grid = NULL;
-    }
-    init_maze(g->cfg.height, g->cfg.width, &g->grid);
-    carve(g->grid, g->cfg.height, g->cfg.width, 0, 0);
-
-    g->maze.bullets = g->cfg.initial_shots;
-    if (g->maze.time_secs > 0.0) {
-        timer_set_start_time(g->maze.time_secs);
-    } else {
-        timer_start();
-    }
+    game_setup_grid(g);
     return STATE_PLAY_LEVEL;
 }
 
@@ -76,3 +63,31 @@ void run_game(const GameSettings *initial_cfg, UI *ui) {
     if (g.grid) free_maze(g.grid);
     free(g.slot);
 }
+
+void game_setup_grid(GameContext *g) {
+    // Clear any existing grid
+    if (g->grid) {
+        free_maze(g->grid);
+        g->grid = NULL;
+    }
+
+    // Allocate & carve a new maze
+    init_maze(g->cfg.height, g->cfg.width, &g->grid);
+    carve   (g->grid, g->cfg.height, g->cfg.width, 0, 0);
+
+    // Reset ammo and timer
+    g->maze.bullets = g->cfg.initial_shots;
+    if (g->maze.time_secs > 0.0) {
+        timer_set_start_time(g->maze.time_secs);
+    } else {
+        timer_start();
+    }
+}
+
+void game_clear_grid(GameContext *g) {
+    if (g->grid) {
+        free_maze(g->grid);
+        g->grid = NULL;
+    }
+}
+

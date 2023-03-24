@@ -34,4 +34,8 @@ GameState game_menu(GameContext *g, UI *ui);
 GameState game_play(GameContext *g, UI *ui);
 void run_game(const GameSettings *initial_cfg, UI *ui);
 
+
+void game_clear_grid(GameContext *g);
+void game_setup_grid(GameContext *g);
+
 #endif // GAME_H
