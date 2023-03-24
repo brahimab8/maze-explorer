@@ -1,8 +1,7 @@
-#include "game.h"
-#include "maze.h"
-#include "save_game.h"
-#include "maze.h"
-#include "timer.h"
+#include "game/game.h"
+#include "engine/maze.h"
+#include "util/save_game.h"
+#include "util/timer.h"
 #include <time.h>
 #include <stdlib.h>
 

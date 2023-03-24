@@ -7,12 +7,12 @@
 #include <unistd.h>            // for system()
 #include <stdlib.h>            // for srand()
 
-#include "ui.h"
-#include "input.h"             // input_poll(), input_get_line()
-#include "save_game.h"         // save_game_slot()
-#include "menu.h"              // run_menu()
-#include "load_menu.h"         // run_load_menu_ui()
-#include "settings_menu.h"     // run_settings_menu_ui()
+#include "ui/ui.h"
+#include "input/input.h"             // input_poll(), input_get_line()
+#include "util/save_game.h"         // save_game_slot()
+#include "menu/menu.h"              // run_menu()
+#include "menu/load_menu.h"         // run_load_menu_ui()
+#include "menu/settings_menu.h"     // run_settings_menu_ui()
 
 static void posix_clear(void) {
     system("clear");

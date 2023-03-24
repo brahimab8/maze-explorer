@@ -1,5 +1,5 @@
 #define _POSIX_C_SOURCE 199309L
-#include "timer.h"
+#include "util/timer.h"
 #include <time.h>
 #include <stdbool.h>
 

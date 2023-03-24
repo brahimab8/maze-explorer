@@ -1,4 +1,6 @@
-#include "menu.h"
+#include "menu/menu.h"
+#include "input/input.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

@@ -1,4 +1,5 @@
-#include "input.h"
+#include "input/input.h"
+
 #include <termios.h>
 #include <unistd.h>
 #include <stdlib.h>

@@ -1,7 +1,7 @@
-#include "game.h"
-#include "pause_menu.h"
-#include "timer.h"     
-#include "ui.h"
+#include "game/game.h"
+#include "menu/pause_menu.h"
+#include "util/timer.h"     
+#include "ui/ui.h"
 #include <unistd.h> 
 
 GameState game_play(GameContext *g, UI *ui) {

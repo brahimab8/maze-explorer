@@ -1,6 +1,7 @@
-#include "game.h"
-#include "save_game.h"
-#include "ui.h"
+#include "game/game.h"
+#include "util/save_game.h"
+#include "ui/ui.h"
+
 #include <time.h>
 #include <string.h>
 

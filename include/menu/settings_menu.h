@@ -1,7 +1,7 @@
 #ifndef SETTINGS_MENU_H
 #define SETTINGS_MENU_H
 
-#include "ui.h"
+typedef struct UI UI;
 
 /**
  * Show the settings submenu via UI callbacks.

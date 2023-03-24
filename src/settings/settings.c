@@ -1,4 +1,4 @@
-#include "settings.h"
+#include "settings/settings.h"
 #include "config.h"
 
 // Backing storage for each setting:

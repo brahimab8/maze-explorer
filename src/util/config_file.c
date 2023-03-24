@@ -1,6 +1,5 @@
-#include "config_file.h"
-#include "settings.h"
-#include "config.h"
+#include "util/config_file.h"
+#include "settings/settings.h"
 
 #include <stdio.h>
 #include <string.h>

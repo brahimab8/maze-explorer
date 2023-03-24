@@ -1,7 +1,7 @@
 #ifndef SAVE_GAME_H
 #define SAVE_GAME_H
 
-#include "maze_ui.h"
+#include "ui/maze_ui.h"
 #include <stdbool.h>
 
 /**

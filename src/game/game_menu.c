@@ -1,7 +1,7 @@
-#include "game.h"
-#include "ui.h"
-#include "main_menu.h"
-#include "save_game.h"
+#include "engine/maze.h"
+#include "game/game.h"
+#include "menu/main_menu.h"
+#include "util/save_game.h"
 #include <stdlib.h>
 #include <string.h>
 

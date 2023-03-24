@@ -1,4 +1,5 @@
-#include "maze.h"
+#include "engine/maze.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 

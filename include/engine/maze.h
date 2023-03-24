@@ -3,7 +3,7 @@
 
 #include <stdbool.h>
 
-typedef struct {
+typedef struct Cell {
     unsigned visited : 1;
     unsigned wallN   : 1;
     unsigned wallS   : 1;

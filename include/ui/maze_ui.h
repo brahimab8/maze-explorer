@@ -1,7 +1,7 @@
 #ifndef MAZE_UI_H
 #define MAZE_UI_H
 
-#include "maze.h"
+typedef struct Cell Cell;
 
 // UI state, rendered alongside the maze
 typedef struct {

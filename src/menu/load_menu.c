@@ -1,4 +1,6 @@
-#include "load_menu.h"
+#include "menu/load_menu.h"
+#include "ui/ui.h"
+
 #include <dirent.h>
 #include <string.h>
 #include <stdlib.h>

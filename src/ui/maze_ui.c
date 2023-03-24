@@ -1,4 +1,6 @@
-#include "maze_ui.h"
+#include "ui/maze_ui.h"
+#include "engine/maze.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -1,8 +1,8 @@
 #include "config.h"
-#include "settings.h"
-#include "config_file.h"
-#include "game.h"
-#include "ui.h"
+#include "settings/settings.h"
+#include "util/config_file.h"
+#include "game/game.h"
+#include "ui/ui.h"
 
 int main(void) {
     config_load(CONFIG_FILE_PATH);

@@ -1,8 +1,8 @@
 #ifndef UI_H
 #define UI_H
 
-#include "maze_ui.h"
-#include "input.h"  
+#include "ui/maze_ui.h"
+#include "input/input.h"  
 #include <stdarg.h>    // for va_list in print()
 
 typedef struct UI {

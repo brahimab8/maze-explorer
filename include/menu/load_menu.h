@@ -1,7 +1,7 @@
 #ifndef LOAD_MENU_H
 #define LOAD_MENU_H
 
-#include "ui.h"
+typedef struct UI UI;
 
 /**
  * Present the “Load Game” menu using the UI abstraction.

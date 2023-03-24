@@ -1,12 +1,12 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "settings.h"  
-#include "maze_ui.h"
-#include "maze.h"     
-#include "ui.h"       
+#include "settings/settings.h"  
+#include "ui/maze_ui.h"          
+#include "ui/ui.h"          
 #include <stdbool.h>  
 
+typedef struct Cell Cell;
 
 /** Finite‐state machine states **/
 typedef enum {

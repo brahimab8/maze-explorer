@@ -1,5 +1,7 @@
-#include "settings_menu.h"
-#include "settings.h"
+#include "menu/settings_menu.h"
+#include "settings/settings.h"
+#include "ui/ui.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

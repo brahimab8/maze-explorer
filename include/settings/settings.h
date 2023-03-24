@@ -1,9 +1,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#include "config.h"
+
 #include <stdbool.h>
 #include <stddef.h>
-#include "config.h"
 
 
 typedef struct {
