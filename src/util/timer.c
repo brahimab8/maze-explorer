@@ -9,10 +9,15 @@ static bool            _running;    // true if clock is ticking
 
 // Compute (new − old) in seconds
 static double timespec_diff(const struct timespec *new, const struct timespec *old) {
-    double s  = (double)(new->tv_sec  - old->tv_sec);
-    double ns = (double)(new->tv_nsec - old->tv_nsec) / 1e9;
-    return s + ns;
+    long sec  = new->tv_sec  - old->tv_sec;
+    long nsec = new->tv_nsec - old->tv_nsec;
+    if (nsec < 0) {
+        sec  -= 1;
+        nsec += 1000000000L;
+    }
+    return (double)sec + (double)nsec / 1e9;
 }
+
 
 void timer_start(void) {
     clock_gettime(CLOCK_MONOTONIC, &_start_time);
