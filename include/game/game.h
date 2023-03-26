@@ -31,7 +31,6 @@ void game_init(GameContext *g,
                const GameSettings *initial_cfg,
                UI *ui);
 GameState game_menu(GameContext *g, UI *ui);
-GameState game_play(GameContext *g, UI *ui);
 void run_game(const GameSettings *initial_cfg, UI *ui);
 
 
