@@ -11,7 +11,7 @@
 #include "util/save_game.h"   // save_game_slot(), load_game_slot()
 
 /* Input */
-#include "input/input.h"             // input_poll(), input_get_line()
+// #include "input/input.h"             // input_poll(), input_get_line()
 
 /* Engine & UI */
 #include "engine/maze.h"             // Cell, free_maze()

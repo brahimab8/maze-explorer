@@ -6,8 +6,8 @@
 #include <cmocka.h>
 
 #include "game/game.h"
+#include "gameplay/play.h"
 #include "ui/ui.h"
-#include "input/input.h"
 #include "config.h"
 #include "menu/pause_menu.h"
 
@@ -35,7 +35,11 @@ static InputAction next_input;
 static int next_pause_choice;
 static void stub_sleep_ms(int ms) { (void)ms; }
 static InputAction stub_poll_input(void) { return next_input; }
-static int stub_run_menu(const char *title, const char *labels[], int count) {
+static void stub_clear_screen(void) { /* no-op */ }
+static int stub_run_menu(const char *title,
+                         const char *labels[],
+                         int count)
+{
     (void)title; (void)labels; (void)count;
     return next_pause_choice;
 }
@@ -83,8 +87,12 @@ static void test_game_init_defaults(void **state) {
 //-- Test: game_play ------------------------------------------------------
 static void make_fake_ui(UI *ui) {
     memset(ui, 0, sizeof *ui);
+    ui->clear_screen = stub_clear_screen;
+    ui->seed_rng   = stub_seed_rng;
+    ui->read_line  = stub_read_line;
+    ui->save_slot  = stub_save_slot;
     ui->poll_input = stub_poll_input;
-    ui->run_menu   = stub_run_menu;
+    ui->run_menu     = stub_run_menu; 
     ui->sleep_ms   = stub_sleep_ms;
 }
 
@@ -99,7 +107,7 @@ static void test_game_play_quit(void **state) {
     make_fake_ui(&ui);
     next_input = INP_QUIT;
 
-    assert_int_equal(game_play(&g, &ui), STATE_EXIT);
+    assert_int_equal(play(&g, &ui), STATE_EXIT);
 }
 
 static void test_game_play_pause_continue(void **state) {
@@ -113,7 +121,7 @@ static void test_game_play_pause_continue(void **state) {
     next_input = INP_PLAY;
     next_pause_choice = PAUSE_CONTINUE;
 
-    assert_int_equal(game_play(&g, &ui), STATE_PLAY_LEVEL);
+    assert_int_equal(play(&g, &ui), STATE_PLAY_LEVEL);
 }
 
 static void test_game_play_pause_mainmenu(void **state) {
@@ -127,7 +135,7 @@ static void test_game_play_pause_mainmenu(void **state) {
     next_input = INP_PLAY;
     next_pause_choice = PAUSE_MAINMENU;
 
-    assert_int_equal(game_play(&g, &ui), STATE_MENU);
+    assert_int_equal(play(&g, &ui), STATE_MENU);
 }
 
 static void test_game_play_pause_quit(void **state) {
@@ -141,7 +149,7 @@ static void test_game_play_pause_quit(void **state) {
     next_input = INP_PLAY;
     next_pause_choice = PAUSE_QUIT;
 
-    assert_int_equal(game_play(&g, &ui), STATE_EXIT);
+    assert_int_equal(play(&g, &ui), STATE_EXIT);
 }
 
 int main(void) {

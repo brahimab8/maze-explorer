@@ -1,5 +1,5 @@
 #include "game/game.h"
-#include "gameplay/play_level.h"
+#include "gameplay/play.h"
 #include "engine/maze.h"
 #include "util/save_game.h"
 #include "util/timer.h"
@@ -49,7 +49,9 @@ void run_game(const GameSettings *initial_cfg, UI *ui) {
             break;
 
           case STATE_PLAY_LEVEL:
-            state = play_level(&g, ui);
+            do {
+                state = play(&g, ui);
+            } while (state == STATE_PLAY_LEVEL);
             break;
 
           case STATE_TRANSITION:

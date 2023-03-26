@@ -16,6 +16,6 @@
  * Returns STATE_PLAY_LEVEL to keep playing, or 
  * one of the other states (MENU, TRANSITION, EXIT).
  */
-GameState play_level(GameContext *g, UI *ui);
+GameState play(GameContext *g, UI *ui);
 
 #endif /* GAMEPLAY_PLAY_H */
