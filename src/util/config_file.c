@@ -35,6 +35,12 @@ bool config_load(const char *path)
         {
             settings_set_fps(v);
         }
+        else if (strcmp(key,"PLAYER_SYMBOL")==0 && val[0]){
+            settings_set_player_symbol(val[0]);
+        }
+        else if (strcmp(key,"EXIT_SYMBOL")==0 && val[0]){
+            settings_set_exit_symbol(val[0]);
+        }
     }
     fclose(f);
     return true;
@@ -49,8 +55,9 @@ bool config_save(const char *path)
     GameSettings cfg;
     settings_get(&cfg);
 
-    // Persist FPS
     fprintf(f, "FPS=%d\n", cfg.fps);
+    fprintf(f,"PLAYER_SYMBOL=%c\n",cfg.player_symbol);
+    fprintf(f,"EXIT_SYMBOL=%c\n",cfg.exit_symbol);
 
     fclose(f);
     return true;

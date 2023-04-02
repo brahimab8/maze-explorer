@@ -20,6 +20,8 @@ typedef struct {
     int height;         // [MAZE_MIN_SIZE, MAZE_MAX_SIZE]
     int initial_shots;  // starting bullets
     int fps;
+    char player_symbol;
+    char exit_symbol;
 } GameSettings;
 
 // Get current settings
@@ -30,6 +32,10 @@ bool settings_set_width(int w);
 bool settings_set_height(int h);
 bool settings_set_initial_shots(int n);
 bool settings_set_fps(int f);
+bool settings_set_player_symbol(int c);
+bool settings_set_exit_symbol(int c);
+// bool settings_set_monster_symbol(int c);
+// bool settings_set_item_symbol(int c);
 
 // Accessors for the metadata
 const SettingDesc *settings_descriptors(void);

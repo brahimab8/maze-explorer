@@ -9,6 +9,11 @@ typedef struct {
     int    level;
     int    bullets;
     double time_secs;
+    int    player_x, player_y;   
+    char   player_symbol;     
+    int    exit_x,   exit_y;     
+    char   exit_symbol;      
+
 } MazeUI;
 
 // Draw the ASCII maze and the UI panel.

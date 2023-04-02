@@ -67,6 +67,10 @@ static void test_draw_maze_output(void **state) {
     ui.level     = 5;
     ui.bullets   = 3;
     ui.time_secs = 75.4;   // 1m15.4s
+    ui.player_x = 0;
+    ui.player_y = 0;
+    ui.exit_x   = cols - 1;
+    ui.exit_y   = rows - 1;
 
     // capture and verify
     char *out = capture_draw(grid, rows, cols, &ui);

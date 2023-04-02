@@ -14,6 +14,7 @@ typedef enum {
     INP_DOWN,
     INP_LEFT,
     INP_RIGHT,
+    INP_SHOOT,
 } InputAction;
 
 /** Switch terminal into raw, non‐blocking mode **/

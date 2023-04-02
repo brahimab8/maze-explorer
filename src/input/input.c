@@ -45,6 +45,7 @@ InputAction input_poll(void) {
             case 'a':  return INP_LEFT;
             case 'd':  return INP_RIGHT;
             case '\n': return INP_SELECT;
+            case ' ': return INP_SHOOT;
             default:   return INP_NONE;
         }
     }

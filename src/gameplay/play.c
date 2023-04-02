@@ -1,19 +1,32 @@
 #include "gameplay/play.h"
 
-// #include "gameplay/player.h"
+#include "gameplay/player.h"
 // #include "gameplay/monster.h"
 // #include "gameplay/projectile.h"
 // #include "gameplay/collision.h"
 #include "menu/pause_menu.h"  
 
 #include "ui/maze_ui.h" 
-#include "util/timer.h"      
+#include "util/timer.h"   
+
+#include <stdbool.h>      
+
+
+// Returns true if the player is standing on the exit cell (bottom-right)
+static bool is_at_exit(const GameContext *g) {
+    return (g->player.x == g->cfg.width  - 1) &&
+           (g->player.y == g->cfg.height - 1);
+}
 
 GameState play(GameContext *g, UI *ui) {
     timer_resume();
 
     // update elapsed time
     g->maze.time_secs = timer_get_elapsed();
+
+    // sync player coords
+    g->maze.player_x     = g->player.x;
+    g->maze.player_y     = g->player.y;
 
     // redraw everything
     ui->clear_screen();
@@ -24,6 +37,23 @@ GameState play(GameContext *g, UI *ui) {
 
     // get one input
     InputAction act = ui->poll_input();
+
+    // movement keys: update player position
+    if (act == INP_UP || act == INP_DOWN ||
+        act == INP_LEFT || act == INP_RIGHT) {
+        player_move(&g->player,
+                    act,
+                    g->grid,
+                    g->cfg.height,
+                    g->cfg.width);
+        // immediately check for exit
+        if (is_at_exit(g))
+            return STATE_TRANSITION;
+    }
+
+    if (act == INP_SHOOT) {
+        player_shoot(&g->player);
+    }
 
     // handle pause/quit immediately
     if (act == INP_PLAY) {

@@ -45,6 +45,23 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
 
     for (int ln = 0; ln < total; ++ln) {
         build_line(line, sizeof(line), cols, grid, ln);
+
+        // ─── player & exit ───
+        if (ln & 1) {
+            int r = ln / 2;
+            // cell centers are at col*4+2
+            if (r == ui->player_y) {
+                int px = ui->player_x * 4 + 2;
+                if (line[px] == ' ')
+                    line[px] = ui->player_symbol;
+            }
+            if (r == ui->exit_y) {
+                int ex = ui->exit_x * 4 + 2;
+                if (line[ex] == ' ')
+                    line[ex] = ui->exit_symbol;
+            }
+        }
+
         int len = strlen(line);
         if (len < width) {
             memset(line + len, ' ', width - len);

@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "settings/settings.h"  
+#include "gameplay/player.h" 
 #include "ui/maze_ui.h"          
 #include "ui/ui.h"          
 #include <stdbool.h>  
@@ -22,6 +23,7 @@ typedef struct {
     GameSettings cfg;
     MazeUI       maze;
     Cell       **grid;
+    Player      player;
     char        *slot;
     int          frame_delay_ms;
 } GameContext;

@@ -22,6 +22,12 @@
 // UI settings
 #define UI_NAME_MAX         16   // max chars in player_name
 
+// UI Symbols
+#define DEFAULT_PLAYER_SYMBOL   '@'
+#define DEFAULT_EXIT_SYMBOL     'E'
+#define DEFAULT_MONSTER_SYMBOL  'M'
+#define DEFAULT_ITEM_SYMBOL     '*'
+
 // Persistent config file
 #define CONFIG_FILE_PATH "persistent.cfg"
 
