@@ -50,8 +50,11 @@ GAME_PLAY := \
 
 $(addprefix $(BINDIR)/,$(GAME_PLAY)): WRAP += -Wl,--wrap=draw_maze
 
-# game_loop also wraps game_init
+# game_loop test also wraps game_init
 $(BINDIR)/game_loop_cmocka: WRAP += -Wl,--wrap=game_init
+
+# player test also wraps can_step
+$(BINDIR)/gameplay_player_cmocka: WRAP += -Wl,--wrap=can_step
 
 # Discover test sources → binaries
 TEST_SRCS := $(wildcard *_cmocka.c)
