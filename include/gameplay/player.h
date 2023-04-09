@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "ui/ui.h"  
 #include "engine/movement.h"
-
+#include "gameplay/projectile.h"
 /**
  * Player state: position, facing direction, ammo.
  */
@@ -32,7 +32,7 @@ void player_move(Player *p, InputAction act, Cell **grid, int rows, int cols);
 /**
  * Attempt to shoot: decrements bullets if any remain, returns true on success.
  */
-bool player_shoot(Player *p);
+bool player_shoot(Player *p, Projectile *plist, int *pcoount);
 
 #endif // GAMEPLAY_PLAYER_H
 

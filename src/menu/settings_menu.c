@@ -6,8 +6,14 @@
 #include <stdio.h>
 #include <string.h>
 
+// Helper to tell if a setter is one of the “symbol” setters
+static bool is_symbol_setter(bool (*setter)(int)) {
+    return setter == settings_set_player_symbol
+        || setter == settings_set_exit_symbol
+        || setter == settings_set_projectile_symbol;
+        // || setter == settings_set_monster_symbol;
+}
 
-// Display and handle the settings submenu
 void run_settings_menu_ui(UI *ui) {
     const SettingDesc *desc = settings_descriptors();
     size_t count = settings_descriptor_count();
@@ -22,13 +28,10 @@ void run_settings_menu_ui(UI *ui) {
             labels[i] = malloc(64);
             if (!labels[i]) goto cleanup_all;
 
-            // Print symbol settings as chars
-            if (desc[i].setter == settings_set_player_symbol ||
-                desc[i].setter == settings_set_exit_symbol) {
+            if (is_symbol_setter(desc[i].setter)) {
                 snprintf(labels[i], 64, "%-15s  '%c'",
                          desc[i].name, (char)*desc[i].value_ptr);
             } else {
-                // Regular integer
                 snprintf(labels[i], 64, "%-15s  %d",
                          desc[i].name, *desc[i].value_ptr);
             }
@@ -38,18 +41,17 @@ void run_settings_menu_ui(UI *ui) {
 
         // Show menu
         int choice = ui->run_menu("Settings", (const char**)labels, total);
-        if (choice == (int)count) break; 
+        if (choice == (int)count) break;  // Back
 
         // Prompt for new value
         char buf[64];
-        if (desc[choice].setter == settings_set_player_symbol ||
-            desc[choice].setter == settings_set_exit_symbol) 
-        {
+        bool sym = is_symbol_setter(desc[choice].setter);
+        if (sym) {
             ui->print("Enter %s (any single character): ",
                       desc[choice].name);
             ui->read_line("", buf, sizeof buf);
-            // take only the first character
-            buf[0] = buf[0] ? buf[0] : *desc[choice].value_ptr;
+            if (buf[0] == '\0')  // no entry → keep old
+                buf[0] = *desc[choice].value_ptr;
         } else {
             snprintf(buf, sizeof buf, "Enter %s (%d–%d): ",
                      desc[choice].name,
@@ -58,11 +60,7 @@ void run_settings_menu_ui(UI *ui) {
             ui->read_line(buf, buf, sizeof buf);
         }
 
-        int val = (desc[choice].setter == settings_set_player_symbol ||
-                   desc[choice].setter == settings_set_exit_symbol)
-                  ? (unsigned char)buf[0]
-                  : atoi(buf);
-
+        int val = sym ? (unsigned char)buf[0] : atoi(buf);
         if (!desc[choice].setter(val)) {
             ui->print("Invalid value for %s. Must be %d–%d.\n",
                       desc[choice].name,

@@ -25,6 +25,8 @@ void game_init(GameContext *g,
 
     g->maze.level = 1;
     g->maze.bullets = g->cfg.initial_shots;
+    g->projectile_count = 0;
+
 
     g->maze.time_secs = 0.0;
     g->frame_delay_ms = 1000 / g->cfg.fps;

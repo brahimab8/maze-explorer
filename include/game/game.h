@@ -3,6 +3,7 @@
 
 #include "settings/settings.h"  
 #include "gameplay/player.h" 
+#include "gameplay/projectile.h"
 #include "ui/maze_ui.h"          
 #include "ui/ui.h"          
 #include <stdbool.h>  
@@ -24,6 +25,9 @@ typedef struct {
     MazeUI       maze;
     Cell       **grid;
     Player      player;
+    Projectile projectiles[MAX_PROJECTILES];
+    int        projectile_count;
+
     char        *slot;
     int          frame_delay_ms;
 } GameContext;

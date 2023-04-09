@@ -50,15 +50,28 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
         if (ln & 1) {
             int r = ln / 2;
             // cell centers are at col*4+2
+            // draw player
             if (r == ui->player_y) {
                 int px = ui->player_x * 4 + 2;
-                if (line[px] == ' ')
-                    line[px] = ui->player_symbol;
+                if (line[px] == ' ') line[px] = ui->player_symbol;
             }
+
+            // draw exit
             if (r == ui->exit_y) {
                 int ex = ui->exit_x * 4 + 2;
-                if (line[ex] == ' ')
-                    line[ex] = ui->exit_symbol;
+                if (line[ex] == ' ') line[ex] = ui->exit_symbol;
+            }
+
+            // draw projectiles
+            for (int i = 0; i < ui->projectile_count; ++i) {
+                const Projectile *p = &ui->projectiles[i];
+                if (!p->active) continue;
+                if (p->y == r) {
+                    int cx = p->x * 4 + 2;
+                    // only overwrite empty space
+                    if (line[cx] == ' ')
+                        line[cx] = ui->projectile_symbol;
+                }
             }
         }
 

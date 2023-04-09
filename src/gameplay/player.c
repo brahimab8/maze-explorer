@@ -1,4 +1,5 @@
 #include "gameplay/player.h"
+#include "gameplay/projectile.h"
 
 void player_init(Player *p, int sx, int sy, int initial_bullets, char symbol) {
     p->x = sx; p->y = sy;
@@ -34,10 +35,25 @@ void player_move(Player *p,
     p->dir = dir;
 }
 
-bool player_shoot(Player *p) {
-    if (p->bullets > 0) {
-        p->bullets--;
-        return true;
+bool player_shoot(Player *p,
+                  Projectile *plist,
+                  int *pcount)
+{
+    if (p->bullets <= 0) {
+        return false;
     }
-    return false;
+    p->bullets--;
+
+    // // compute spawn cell just ahead of the player
+    // int sx = p->x, sy = p->y;
+    // switch (p->dir) {
+    //   case DIR_UP:    sy--; break;
+    //   case DIR_DOWN:  sy++; break;
+    //   case DIR_LEFT:  sx--; break;
+    //   case DIR_RIGHT: sx++; break;
+    // }
+
+    // shoot from exactly where the player stands
+    projectile_fire(plist, pcount, p->x, p->y, p->dir);
+    return true;
 }

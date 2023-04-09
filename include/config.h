@@ -25,6 +25,7 @@
 // UI Symbols
 #define DEFAULT_PLAYER_SYMBOL   '@'
 #define DEFAULT_EXIT_SYMBOL     'E'
+#define DEFAULT_PROJECTILE_SYMBOL '.'
 #define DEFAULT_MONSTER_SYMBOL  'M'
 #define DEFAULT_ITEM_SYMBOL     '*'
 

@@ -2,38 +2,32 @@
 
 #include "gameplay/player.h"
 // #include "gameplay/monster.h"
-// #include "gameplay/projectile.h"
-// #include "gameplay/collision.h"
+#include "gameplay/wall.h"
 #include "menu/pause_menu.h"  
 
 #include "ui/maze_ui.h" 
 #include "util/timer.h"   
 
 #include <stdbool.h>      
+#include <string.h>
 
+static Projectile   projectiles[MAX_PROJECTILES];
+static int          projectile_count = 0;
 
-// Returns true if the player is standing on the exit cell (bottom-right)
+// Returns true if the player is standing on the exit cell
 static bool is_at_exit(const GameContext *g) {
-    return (g->player.x == g->cfg.width  - 1) &&
-           (g->player.y == g->cfg.height - 1);
+    return (g->player.x == g->maze.exit_x) &&
+           (g->player.y == g->maze.exit_y);
 }
 
 GameState play(GameContext *g, UI *ui) {
     timer_resume();
 
-    // update elapsed time
+    // update elapsed time & UI
     g->maze.time_secs = timer_get_elapsed();
-
-    // sync player coords
     g->maze.player_x     = g->player.x;
     g->maze.player_y     = g->player.y;
-
-    // redraw everything
-    ui->clear_screen();
-    draw_maze(g->grid,
-                g->cfg.height,
-                g->cfg.width,
-                &g->maze);
+    g->maze.bullets       = g->player.bullets;
 
     // get one input
     InputAction act = ui->poll_input();
@@ -52,8 +46,28 @@ GameState play(GameContext *g, UI *ui) {
     }
 
     if (act == INP_SHOOT) {
-        player_shoot(&g->player);
+        player_shoot(&g->player, projectiles, &projectile_count);
     }
+
+    //sync projectile buffer into UI
+    memcpy(g->maze.projectiles,
+           projectiles,
+           projectile_count * sizeof projectiles[0]);
+    g->maze.projectile_count = projectile_count;
+
+    // Move all projectiles one step 
+    projectile_update(
+        projectiles, &projectile_count,
+        g->grid, g->cfg.height, g->cfg.width,
+        /*on_hit_wall=*/ wall_destroy,
+        /*on_hit_monster=*/NULL
+    );
+    
+    ui->clear_screen();
+    draw_maze(g->grid,
+              g->cfg.height,
+              g->cfg.width,
+              &g->maze);
 
     // handle pause/quit immediately
     if (act == INP_PLAY) {

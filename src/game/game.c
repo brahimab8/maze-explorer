@@ -14,16 +14,32 @@ static GameState setup_level(GameContext *g, UI *ui) {
     // reset maze
     game_setup_grid(g);
 
-    // reset player back to (0,0) with fresh ammo
-    player_init(&g->player, 0, 0,  g->cfg.initial_shots, g->cfg.player_symbol);
-
+    if (g->maze.level == 1) {
+        // first level: give the player a fresh load of ammo
+        player_init(
+            &g->player,
+            /* sx */ 0,
+            /* sy */ 0,
+            /* initial_bullets */ g->cfg.initial_shots,
+            /* symbol */          g->cfg.player_symbol
+        );
+    } else {
+        // subsequent levels
+        g->player.x = 0;
+        g->player.y = 0;
+        g->player.dir = DIR_DOWN;
+    }
     g->maze.player_symbol = g->player.symbol;
     g->maze.player_x      = g->player.x;
     g->maze.player_y      = g->player.y;
+    g->maze.bullets       = g->player.bullets;
 
-    g->maze.exit_symbol   = 'E';
+    g->maze.exit_symbol = g->cfg.exit_symbol;
     g->maze.exit_x        = g->cfg.width  - 1;
     g->maze.exit_y        = g->cfg.height - 1;
+
+    g->maze.projectile_symbol = g->cfg.projectile_symbol;
+    g->maze.projectile_count  = 0;
 
     return STATE_PLAY_LEVEL;
 }
