@@ -4,6 +4,7 @@
 #include <cmocka.h>
 
 #include "gameplay/player.h"
+#include "gameplay/projectile.h" 
 
 // stub can_step to be injected from engine/movement.c
 extern bool __wrap_can_step(Cell **grid, int rows, int cols,
@@ -54,13 +55,28 @@ static void test_player_move_allowed(void **state) {
 
 static void test_player_shoot(void **state) {
     (void)state;
-    Player p = { .x=0,.y=0,.dir=DIR_DOWN,.bullets=2,.symbol='@' };
-    assert_true(player_shoot(&p));
+    Player p = { .x = 2, .y = 3, .dir = DIR_RIGHT, .bullets = 2, .symbol = '@' };
+    Projectile list[4];
+    int count = 0;
+
+    // first shot
+    assert_true(player_shoot(&p, list, &count));
     assert_int_equal(p.bullets, 1);
-    assert_true(player_shoot(&p));
+    assert_int_equal(count, 1);
+    assert_true(list[0].active);
+    assert_int_equal(list[0].x, 2);
+    assert_int_equal(list[0].y, 3);
+    assert_int_equal(list[0].dir, DIR_RIGHT);
+
+    // second shot
+    assert_true(player_shoot(&p, list, &count));
     assert_int_equal(p.bullets, 0);
-    assert_false(player_shoot(&p));
+    assert_int_equal(count, 2);
+
+    // no ammo left
+    assert_false(player_shoot(&p, list, &count));
     assert_int_equal(p.bullets, 0);
+    assert_int_equal(count, 2);
 }
 
 int main(void) {

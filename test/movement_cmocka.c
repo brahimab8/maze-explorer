@@ -3,6 +3,9 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
+#include <stdlib.h>    
+#include <string.h> 
+
 #include "engine/maze.h"       // for Cell
 #include "engine/movement.h"   // for can_step(), Direction
 
@@ -16,7 +19,8 @@ static Cell **make_two_cells(void) {
     // initialize both cells: all walls present
     for (int i = 0; i < 2; i++) {
         pool[i].visited = 0;
-        pool[i].wallN = pool[i].wallS = pool[i].wallE = pool[i].wallW = 1;
+        pool[i].wallN = pool[i].wallS =
+        pool[i].wallE = pool[i].wallW = 1;
     }
     // knock down the wall between them
     pool[0].wallE = 0;
@@ -50,7 +54,7 @@ static void test_can_step_blocked_by_wall(void **state) {
 static void test_can_step_bounds(void **state) {
     (void)state;
     Cell **grid = make_two_cells();
-    // stepping up/down is always out‐of‐bounds on a single‐row maze
+    // stepping up/down is always out-of-bounds on a single-row maze
     assert_false(can_step(grid, 1, 2, 0, 0, DIR_UP));
     assert_false(can_step(grid, 1, 2, 0, 0, DIR_DOWN));
     free(grid[0]);
