@@ -5,10 +5,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-static const char *ui_lines[4] = {
+static const char *ui_lines[5] = {
     "Player: %s",
     "Level: %d",
     "Bullets: %d",
+    "Monsters: %d", 
     "Time: %02d:%02d.%d"
 };
 
@@ -62,18 +63,22 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
                 if (line[ex] == ' ') line[ex] = ui->exit_symbol;
             }
 
-            // draw projectiles
+            // projectiles
             for (int i = 0; i < ui->projectile_count; ++i) {
                 const Projectile *p = &ui->projectiles[i];
-                if (!p->active) continue;
-                if (p->y == r) {
-                    int cx = p->x * 4 + 2;
-                    // only overwrite empty space
-                    if (line[cx] == ' ')
-                        line[cx] = ui->projectile_symbol;
-                }
+                if (!p->active || p->y != r) continue;
+                int cx = p->x * 4 + 2;
+                if (line[cx] == ' ') line[cx] = ui->projectile_symbol;
+            }
+            // monsters
+            for (int i = 0; i < ui->monster_count; ++i) {
+                const Monster *m = &ui->monsters[i];
+                if (m->y != r) continue;
+                int mx = m->x * 4 + 2;
+                if (line[mx] == ' ') line[mx] = ui->monster_symbol;
             }
         }
+
 
         int len = strlen(line);
         if (len < width) {
@@ -82,7 +87,7 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
         }
 
         info[0] = '\0';
-        if (ln < 4) {
+        if (ln < 5) {
             switch (ln) {
                 case 0:
                     snprintf(info, sizeof(info), ui_lines[0], ui->player_name);
@@ -93,15 +98,19 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
                 case 2:
                     snprintf(info, sizeof(info), ui_lines[2], ui->bullets);
                     break;
-                case 3: {
+                case 3:
+                    snprintf(info, sizeof(info), ui_lines[3], ui->monster_count);
+                    break;
+                case 4: {
                     int mm = (int)(ui->time_secs / 60);
                     int ss = ((int)ui->time_secs) % 60;
                     int d  = (int)((ui->time_secs - (int)ui->time_secs) * 10);
-                    snprintf(info, sizeof(info), ui_lines[3], mm, ss, d);
+                    snprintf(info, sizeof(info), ui_lines[4], mm, ss, d);
                     break;
                 }
             }
         }
+
 
         printf("%s%s\n", line, info);
     }

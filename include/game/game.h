@@ -3,6 +3,7 @@
 
 #include "settings/settings.h"  
 #include "gameplay/player.h" 
+#include "gameplay/monster.h"
 #include "gameplay/projectile.h"
 #include "ui/maze_ui.h"          
 #include "ui/ui.h"          
@@ -27,7 +28,9 @@ typedef struct {
     Player      player;
     Projectile projectiles[MAX_PROJECTILES];
     int        projectile_count;
-
+    Monster monsters[MAX_MONSTERS];
+    int     monster_count;
+    
     char        *slot;
     int          frame_delay_ms;
 } GameContext;

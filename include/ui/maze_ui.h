@@ -2,6 +2,7 @@
 #define MAZE_UI_H
 
 #include "gameplay/projectile.h"
+#include "gameplay/monster.h"
 
 typedef struct Cell Cell;
 
@@ -11,13 +12,20 @@ typedef struct {
     int    level;
     int    bullets;
     double time_secs;
+
     int    player_x, player_y;   
-    char   player_symbol;     
+    char   player_symbol;    
+
     int    exit_x,   exit_y;     
     char   exit_symbol;    
-    Projectile *projectiles;
+
+    Projectile projectiles[MAX_PROJECTILES];
     int          projectile_count;
     char         projectile_symbol;
+
+    Monster monsters[MAX_MONSTERS];
+    int     monster_count;
+    char    monster_symbol;
 } MazeUI;
 
 // Draw the ASCII maze and the UI panel.

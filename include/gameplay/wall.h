@@ -8,6 +8,12 @@
  * Remove the wall on side `dir` of cell (x,y).  Also remove the
  * opposite wall in the adjacent cell.
  */
-void wall_destroy(Cell **grid, int rows, int cols, int x, int y, Direction dir);
+void wall_destroy_cb(void *user_data,
+                     Cell **grid,
+                     int rows,
+                     int cols,
+                     int x,
+                     int y,
+                     Direction dir);
 
 #endif // GAMEPLAY_WALL_H

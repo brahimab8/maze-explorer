@@ -1,12 +1,17 @@
 #include "game/game.h"
 #include "gameplay/play.h"
 #include "gameplay/player.h"
-
+#include "gameplay/monster.h"
 #include "engine/maze.h"
 #include "util/save_game.h"
 #include "util/timer.h"
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
+
+// local monster storage
+static Monster monsters[MAX_MONSTERS];
+static int     monster_count = 0;
 
 static GameState setup_level(GameContext *g, UI *ui) {
     (void)ui;   // silence “unused parameter” warning
@@ -40,6 +45,22 @@ static GameState setup_level(GameContext *g, UI *ui) {
 
     g->maze.projectile_symbol = g->cfg.projectile_symbol;
     g->maze.projectile_count  = 0;
+
+    g->maze.monster_count = 0;
+
+    // (Re)spawn the monsters for this level
+    monsters_init(
+        monsters, &monster_count,
+        g->maze.level,
+        g->cfg.height,
+        g->cfg.width
+    );
+    // Push them into the UI layer
+    memcpy(g->maze.monsters,
+           monsters,
+           monster_count * sizeof monsters[0]);
+    g->maze.monster_count  = monster_count;
+    g->maze.monster_symbol = g->cfg.monster_symbol;
 
     return STATE_PLAY_LEVEL;
 }

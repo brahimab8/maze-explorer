@@ -38,7 +38,8 @@ void projectile_update(Projectile *list,
                        Cell **grid,
                        int rows,
                        int cols,
-                       void (*on_hit_wall)(Cell **, int, int, int, int, Direction),
-                       bool (*on_hit_monster)(int x, int y));
+                       void (*on_hit_wall)(void *ud, Cell **, int, int, int, int, Direction),
+                       bool (*on_hit_monster)(void *ud, int x, int y),
+                       void        *user_data );
 
 #endif // GAMEPLAY_PROJECTILE_H

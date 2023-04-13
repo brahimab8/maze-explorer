@@ -21,8 +21,9 @@ void projectile_update(Projectile *list,
                        Cell **grid,
                        int rows,
                        int cols,
-                       void (*on_hit_wall)(Cell **, int, int, int, int, Direction),
-                       bool (*on_hit_monster)(int x, int y))
+                       void (*on_hit_wall)(void *ud, Cell **, int, int, int, int, Direction),
+                       bool       (*on_hit_monster)(void *ud, int x,int y),
+                       void        *user_data )
 {
     int dst = 0;
     for (int src = 0; src < *count; ++src) {
@@ -41,7 +42,7 @@ void projectile_update(Projectile *list,
         else if (!can_step(grid, rows, cols, p.x, p.y, p.dir)) {
             p.active = false;
             if (on_hit_wall) {
-                on_hit_wall(grid, rows, cols, p.x, p.y, p.dir);
+                on_hit_wall(user_data, grid, rows, cols, p.x, p.y, p.dir);
             }
         }
         else {
@@ -49,7 +50,7 @@ void projectile_update(Projectile *list,
             p.x = nx;
             p.y = ny;
             // monster hit?
-            if (on_hit_monster && on_hit_monster(nx, ny)) {
+            if (on_hit_monster && on_hit_monster(user_data, nx, ny)) {
                 p.active = false;
             }
         }

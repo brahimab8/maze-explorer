@@ -9,7 +9,7 @@ static int g_fps            = DEFAULT_FPS;
 static int g_player_symbol   = DEFAULT_PLAYER_SYMBOL;
 static int g_exit_symbol     = DEFAULT_EXIT_SYMBOL;
 static int g_projectile_symbol = DEFAULT_PROJECTILE_SYMBOL;
-// static int g_monster_symbol    = DEFAULT_MONSTER_SYMBOL;
+static int g_monster_symbol    = DEFAULT_MONSTER_SYMBOL;
 
 static bool symbol_setter(int *field, int c) {
     if (c < 32 || c > 126) return false;
@@ -26,7 +26,7 @@ static SettingDesc g_settings[] = {
     { "Player Symbol", &g_player_symbol,     settings_set_exit_symbol,   32,                   126 },
     { "Exit Symbol",   &g_exit_symbol,       settings_set_exit_symbol,   32,                   126 },
     { "Projectile Sym", &g_projectile_symbol, settings_set_projectile_symbol, 32,               126 },
-    // { "Monster Symbol",   &g_monster_symbol,    settings_set_monster_symbol, 32,                 126 },
+    { "Monster Symbol",   &g_monster_symbol,    settings_set_monster_symbol, 32,                 126 },
 
 };
 static const size_t g_settings_count = sizeof g_settings / sizeof *g_settings;
@@ -48,6 +48,7 @@ void settings_get(GameSettings *out) {
     out->player_symbol   = (char)g_player_symbol;
     out->exit_symbol     = (char)g_exit_symbol;
     out->projectile_symbol = (char)g_projectile_symbol;
+    out->monster_symbol    = (char)g_monster_symbol;
 }
 
 // Individual setters
@@ -87,6 +88,6 @@ bool settings_set_projectile_symbol(int c) {
     return symbol_setter(&g_projectile_symbol, c); 
 }
 
-// bool settings_set_monster_symbol(int c)  { 
-//     return symbol_setter(&g_monster_symbol, c); 
-// }
+bool settings_set_monster_symbol(int c)  { 
+    return symbol_setter(&g_monster_symbol, c); 
+}

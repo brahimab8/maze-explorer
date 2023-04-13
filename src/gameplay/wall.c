@@ -26,3 +26,20 @@ void wall_destroy(Cell **grid, int rows, int cols, int x, int y, Direction dir) 
         break;
     }
 }
+
+void wall_destroy_cb(void *user_data,
+                     Cell **grid,
+                     int rows,
+                     int cols,
+                     int x,
+                     int y,
+                     Direction dir)
+{
+    (void)user_data;      // unused
+    wall_destroy(grid,
+                 rows,
+                 cols,
+                 x,
+                 y,
+                 dir);
+}
