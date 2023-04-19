@@ -14,6 +14,10 @@
 #define MIN_INITIAL_SHOTS        0
 #define MAX_INITIAL_SHOTS        100
 
+#define MIN_ITEM_BONUS           1   
+#define MAX_ITEM_BONUS           100
+#define DEFAULT_ITEM_BONUS       5
+
 // FPS limits & defaults
 #define MIN_FPS 1
 #define MAX_FPS 240

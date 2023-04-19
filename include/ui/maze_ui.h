@@ -3,6 +3,7 @@
 
 #include "gameplay/projectile.h"
 #include "gameplay/monster.h"
+#include "gameplay/item.h"
 
 typedef struct Cell Cell;
 
@@ -26,6 +27,10 @@ typedef struct {
     Monster monsters[MAX_MONSTERS];
     int     monster_count;
     char    monster_symbol;
+
+    Item items[MAX_ITEMS];
+    int  item_count;
+    char item_symbol;
 } MazeUI;
 
 // Draw the ASCII maze and the UI panel.

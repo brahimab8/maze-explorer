@@ -10,6 +10,8 @@ static int g_player_symbol   = DEFAULT_PLAYER_SYMBOL;
 static int g_exit_symbol     = DEFAULT_EXIT_SYMBOL;
 static int g_projectile_symbol = DEFAULT_PROJECTILE_SYMBOL;
 static int g_monster_symbol    = DEFAULT_MONSTER_SYMBOL;
+static int g_item_symbol       = DEFAULT_ITEM_SYMBOL;
+static int g_item_bonus        = DEFAULT_ITEM_BONUS;                
 
 static bool symbol_setter(int *field, int c) {
     if (c < 32 || c > 126) return false;
@@ -23,11 +25,12 @@ static SettingDesc g_settings[] = {
     { "Height",         &g_maze_height,      settings_set_height,        MAZE_MIN_SIZE,        MAZE_MAX_SIZE },
     { "Initial Shots",  &g_initial_shots,    settings_set_initial_shots, MIN_INITIAL_SHOTS,    MAX_INITIAL_SHOTS },
     { "FPS",            &g_fps,              settings_set_fps,           MIN_FPS,              MAX_FPS },
-    { "Player Symbol", &g_player_symbol,     settings_set_exit_symbol,   32,                   126 },
+    { "Player Symbol", &g_player_symbol,     settings_set_player_symbol,   32,                   126 },
     { "Exit Symbol",   &g_exit_symbol,       settings_set_exit_symbol,   32,                   126 },
     { "Projectile Sym", &g_projectile_symbol, settings_set_projectile_symbol, 32,               126 },
     { "Monster Symbol",   &g_monster_symbol,    settings_set_monster_symbol, 32,                 126 },
-
+    { "Item Symbol",      &g_item_symbol,         settings_set_item_symbol,       32,                   126 },
+    { "Item Bonus",       &g_item_bonus,          settings_set_item_bonus,        MIN_ITEM_BONUS,       MAX_ITEM_BONUS },
 };
 static const size_t g_settings_count = sizeof g_settings / sizeof *g_settings;
 
@@ -49,7 +52,8 @@ void settings_get(GameSettings *out) {
     out->exit_symbol     = (char)g_exit_symbol;
     out->projectile_symbol = (char)g_projectile_symbol;
     out->monster_symbol    = (char)g_monster_symbol;
-}
+    out->item_symbol       = (char)g_item_symbol;
+    out->item_bonus        = g_item_bonus;}
 
 // Individual setters
 bool settings_set_width(int w) {
@@ -90,4 +94,15 @@ bool settings_set_projectile_symbol(int c) {
 
 bool settings_set_monster_symbol(int c)  { 
     return symbol_setter(&g_monster_symbol, c); 
+}
+
+bool settings_set_item_symbol(int c) {
+    return symbol_setter(&g_item_symbol, c);
+}
+
+bool settings_set_item_bonus(int n) {
+    if (n < MIN_ITEM_BONUS || n > MAX_ITEM_BONUS)      
+        return false;
+    g_item_bonus = n;
+    return true;
 }

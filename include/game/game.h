@@ -5,6 +5,7 @@
 #include "gameplay/player.h" 
 #include "gameplay/monster.h"
 #include "gameplay/projectile.h"
+#include "gameplay/item.h" 
 #include "ui/maze_ui.h"          
 #include "ui/ui.h"          
 #include <stdbool.h>  
@@ -17,6 +18,7 @@ typedef enum {
     STATE_SETUP_LEVEL,
     STATE_PLAY_LEVEL,
     STATE_TRANSITION,
+    STATE_GAME_OVER, 
     STATE_EXIT
 } GameState;
 
@@ -25,11 +27,13 @@ typedef struct {
     GameSettings cfg;
     MazeUI       maze;
     Cell       **grid;
-    Player      player;
-    Projectile projectiles[MAX_PROJECTILES];
-    int        projectile_count;
-    Monster monsters[MAX_MONSTERS];
-    int     monster_count;
+    Player       player;
+    Projectile   projectiles[MAX_PROJECTILES];
+    int          projectile_count;
+    Monster      monsters[MAX_MONSTERS];
+    int          monster_count;
+    Item         items[MAX_ITEMS];
+    int          item_count;
     
     char        *slot;
     int          frame_delay_ms;

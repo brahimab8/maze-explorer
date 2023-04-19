@@ -13,6 +13,10 @@
 static Monster monsters[MAX_MONSTERS];
 static int     monster_count = 0;
 
+// local item storage
+static Item     items[MAX_ITEMS];
+static int      item_count = 0;
+
 static GameState setup_level(GameContext *g, UI *ui) {
     (void)ui;   // silence “unused parameter” warning
 
@@ -39,11 +43,9 @@ static GameState setup_level(GameContext *g, UI *ui) {
     g->maze.player_y      = g->player.y;
     g->maze.bullets       = g->player.bullets;
 
-    g->maze.exit_symbol = g->cfg.exit_symbol;
     g->maze.exit_x        = g->cfg.width  - 1;
     g->maze.exit_y        = g->cfg.height - 1;
 
-    g->maze.projectile_symbol = g->cfg.projectile_symbol;
     g->maze.projectile_count  = 0;
 
     g->maze.monster_count = 0;
@@ -55,12 +57,26 @@ static GameState setup_level(GameContext *g, UI *ui) {
         g->cfg.height,
         g->cfg.width
     );
-    // Push them into the UI layer
+    // Push into UI layer
     memcpy(g->maze.monsters,
            monsters,
            monster_count * sizeof monsters[0]);
     g->maze.monster_count  = monster_count;
-    g->maze.monster_symbol = g->cfg.monster_symbol;
+
+    // (Re)spawn the items for this level
+    items_init(
+        items, &item_count,
+        g->cfg.height,       // rows
+        g->cfg.width,        // cols
+        /* avoid player */   0, 0,
+        /* symbol */        g->cfg.item_symbol
+    );
+
+    // Push into UI layer
+    memcpy(g->maze.items,
+           items,
+           item_count * sizeof items[0]);
+    g->maze.item_count = item_count;
 
     return STATE_PLAY_LEVEL;
 }
@@ -110,6 +126,24 @@ void run_game(const GameSettings *initial_cfg, UI *ui) {
           case STATE_TRANSITION:
             state = do_transition(&g, ui);
             break;
+        
+          case STATE_GAME_OVER:
+            ui->clear_screen();
+            ui->print("Game Over!\nYou reached level %d total time: %02d:%02d\nPress any key to return to menu…",
+                    g.maze.level,
+                    (int)g.maze.time_secs/60,
+                    (int)g.maze.time_secs%60);
+            g.grid = NULL;
+
+            while (ui->poll_input() == INP_NONE) {
+                ui->sleep_ms(50);
+            }
+            state = STATE_MENU;
+            break;
+
+          case STATE_EXIT:
+            break;                 
+
 
           default:
             state = STATE_EXIT;

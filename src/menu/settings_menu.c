@@ -11,7 +11,8 @@ static bool is_symbol_setter(bool (*setter)(int)) {
     return setter == settings_set_player_symbol
         || setter == settings_set_exit_symbol
         || setter == settings_set_projectile_symbol
-        || setter == settings_set_monster_symbol;
+        || setter == settings_set_monster_symbol
+        || setter == settings_set_item_symbol;
 }
 
 void run_settings_menu_ui(UI *ui) {

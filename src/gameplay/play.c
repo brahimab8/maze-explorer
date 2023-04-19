@@ -50,12 +50,6 @@ GameState play(GameContext *g, UI *ui) {
                     &g->maze.projectile_count);
     }
 
-    // //sync projectile buffer into UI
-    // memcpy(g->maze.projectiles,
-    //        projectiles,
-    //        projectile_count * sizeof projectiles[0]);
-    // g->maze.projectile_count = projectile_count;
-
     // Move all projectiles one step 
     projectile_update(
         g->maze.projectiles,
@@ -79,12 +73,27 @@ GameState play(GameContext *g, UI *ui) {
         g->cfg.width
     );
 
-    // memcpy(g->maze.monsters,
-    //        monsters,
-    //        monster_count * sizeof monsters[0]);
-    // g->maze.monster_count = monster_count;
-    
+    // if any monster finds the player, end the game
+    for (int i = 0; i < g->maze.monster_count; ++i) {
+        if (g->maze.monsters[i].x == g->player.x &&
+            g->maze.monsters[i].y == g->player.y) {
+            return STATE_GAME_OVER;
+        }
+    }    
 
+    // check for item pickups
+    for (int i = 0; i < g->maze.item_count; ++i) {
+    Item *it = &g->maze.items[i];
+    if (it->active &&
+        it->x == g->player.x &&
+        it->y == g->player.y)
+    {
+        it->active = false;
+        g->player.bullets += g->cfg.item_bonus;
+        break;
+    }
+}
+    
     ui->clear_screen();
     draw_maze(g->grid,
               g->cfg.height,

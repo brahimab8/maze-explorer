@@ -77,6 +77,16 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
                 int mx = m->x * 4 + 2;
                 if (line[mx] == ' ') line[mx] = ui->monster_symbol;
             }
+
+            // items pickup
+            for (int i = 0; i < ui->item_count; ++i) {
+                const Item *it = &ui->items[i];
+                if (!it->active || it->y != r) continue;
+                int ix = it->x * 4 + 2;
+                if (line[ix] == ' ')
+                    line[ix] = ui->item_symbol;
+            }
+
         }
 
 
@@ -112,6 +122,6 @@ void draw_maze(Cell **grid, int rows, int cols, const MazeUI *ui)
         }
 
 
-        printf("%s%s\n", line, info);
+        printf("%s  %s\n", line, info);
     }
 }

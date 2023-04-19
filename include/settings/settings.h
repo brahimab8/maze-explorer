@@ -24,7 +24,8 @@ typedef struct {
     char exit_symbol;
     char projectile_symbol;
     char monster_symbol;
-    // char item_symbol;
+    char item_symbol;
+    int  item_bonus;
 } GameSettings;
 
 // Get current settings
@@ -39,7 +40,8 @@ bool settings_set_player_symbol(int c);
 bool settings_set_exit_symbol(int c);
 bool settings_set_projectile_symbol(int c);
 bool settings_set_monster_symbol(int c);
-// bool settings_set_item_symbol(int c);
+bool settings_set_item_symbol(int c);
+bool settings_set_item_bonus(int n); 
 
 // Accessors for the metadata
 const SettingDesc *settings_descriptors(void);

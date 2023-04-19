@@ -32,13 +32,13 @@ void game_init(GameContext *g,
     g->frame_delay_ms = 1000 / g->cfg.fps;
 
     // // Pull the dynamic symbols straight from the config
-    // g->maze.player_symbol     = g->cfg.player_symbol;
-    // g->maze.exit_symbol       = g->cfg.exit_symbol;
+    g->maze.player_symbol     = g->cfg.player_symbol;
+    g->maze.exit_symbol       = g->cfg.exit_symbol;
     g->maze.projectile_symbol = g->cfg.projectile_symbol;
     g->maze.monster_symbol    = g->cfg.monster_symbol;
+    g->maze.item_symbol       = g->cfg.item_symbol;
 
     g->projectile_count = 0;
-    // g->monster_count    = 1;
 
     g->slot = strdup(g->maze.player_name);
     ui->save_slot(g->slot, &g->maze,
