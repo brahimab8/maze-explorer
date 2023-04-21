@@ -31,16 +31,38 @@ bool config_load(const char *path)
             *nl = '\0';
 
         int v = atoi(val);
-        if (strcmp(key, "FPS") == 0)
-        {
+        
+        if (strcmp(key, "Width") == 0) {
+            settings_set_width(v);
+        }
+        else if (strcmp(key, "Height") == 0) {
+            settings_set_height(v);
+        }
+        else if (strcmp(key, "InitialShots") == 0) {
+            settings_set_initial_shots(v);
+        }
+        else if (strcmp(key, "FPS") == 0) {
             settings_set_fps(v);
         }
-        else if (strcmp(key,"PLAYER_SYMBOL")==0 && val[0]){
+        else if (strcmp(key,"PlayerSymbol")==0 && val[0]){
             settings_set_player_symbol(val[0]);
         }
-        else if (strcmp(key,"EXIT_SYMBOL")==0 && val[0]){
+        else if (strcmp(key,"ExitSymbol")==0 && val[0]){
             settings_set_exit_symbol(val[0]);
         }
+        else if (strcmp(key, "ProjectileSymbol") == 0 && val[0]) {
+            settings_set_projectile_symbol((unsigned char)val[0]);
+        }
+        else if (strcmp(key, "MonsterSymbol") == 0 && val[0]) {
+            settings_set_monster_symbol((unsigned char)val[0]);
+        }
+        else if (strcmp(key, "ItemSymbol") == 0 && val[0]) {
+            settings_set_item_symbol((unsigned char)val[0]);
+        }
+        else if (strcmp(key, "ItemBonus") == 0) {
+            settings_set_item_bonus(v);
+        }
+
     }
     fclose(f);
     return true;
@@ -55,9 +77,17 @@ bool config_save(const char *path)
     GameSettings cfg;
     settings_get(&cfg);
 
-    fprintf(f, "FPS=%d\n", cfg.fps);
-    fprintf(f,"PLAYER_SYMBOL=%c\n",cfg.player_symbol);
-    fprintf(f,"EXIT_SYMBOL=%c\n",cfg.exit_symbol);
+    fprintf(f, "# Maze Explorer configuration\n");
+    fprintf(f, "Width=%d\n",          cfg.width);
+    fprintf(f, "Height=%d\n",         cfg.height);
+    fprintf(f, "InitialShots=%d\n",   cfg.initial_shots);
+    fprintf(f, "FPS=%d\n",            cfg.fps);
+    fprintf(f, "PlayerSymbol=%c\n",   cfg.player_symbol);
+    fprintf(f, "ExitSymbol=%c\n",     cfg.exit_symbol);
+    fprintf(f, "ProjectileSymbol=%c\n", cfg.projectile_symbol);
+    fprintf(f, "MonsterSymbol=%c\n",  cfg.monster_symbol);
+    fprintf(f, "ItemSymbol=%c\n",     cfg.item_symbol);
+    fprintf(f, "ItemBonus=%d\n",      cfg.item_bonus);
 
     fclose(f);
     return true;

@@ -1,10 +1,9 @@
 #include "game/game.h"
-#include "gameplay/play.h"
-#include "gameplay/player.h"
-#include "gameplay/monster.h"
 #include "engine/maze.h"
+#include "gameplay/play.h"
 #include "util/save_game.h"
 #include "util/timer.h"
+
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
@@ -86,15 +85,33 @@ static GameState do_transition(GameContext *g, UI *ui) {
     free_maze(g->grid);
     g->grid = NULL;
 
+    int prev_level = g->maze.level;
+    double total_time = g->maze.time_secs;
+    int bullets_left = g->maze.bullets;
+
     g->maze.level++;
+
+    // save progress
     ui->save_slot(g->slot, &g->maze,
                   g->cfg.height, g->cfg.width,
-                  g->maze.time_secs);
+                  total_time);
 
     ui->clear_screen();
-    ui->print("Level %d complete!\nPress any key for level %d…",
-              g->maze.level - 1, g->maze.level);
-    ui->poll_input();
+
+    // summary header
+    ui->print("=== Level %d Complete ===\n", prev_level);
+    ui->print("Time:      %02d:%02d.%d\n",
+              (int)(total_time/60),
+              (int)total_time % 60,
+              (int)((total_time - (int)total_time)*10));
+    ui->print("Bullets:   %d remaining\n", bullets_left);
+    ui->print("Next Level: %d\n\n", g->maze.level);
+    ui->print("Press Enter to start Level %d…\n", g->maze.level);
+
+    // wait until the user presses Enter
+    while (ui->poll_input() != INP_SELECT) {
+        ui->sleep_ms(20);
+    }
 
     return STATE_SETUP_LEVEL;
 }

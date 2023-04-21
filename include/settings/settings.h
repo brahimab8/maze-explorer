@@ -47,4 +47,18 @@ bool settings_set_item_bonus(int n);
 const SettingDesc *settings_descriptors(void);
 size_t settings_descriptor_count(void);
 
+// Reset all settings to their defaults (for tests)
+void settings_reset(void);
+// Getters for testing
+int   settings_get_width(void);
+int   settings_get_height(void);
+int   settings_get_initial_shots(void);
+int   settings_get_fps(void);
+char  settings_get_player_symbol(void);
+char  settings_get_exit_symbol(void);
+char  settings_get_projectile_symbol(void);
+char  settings_get_monster_symbol(void);
+char  settings_get_item_symbol(void);
+int   settings_get_item_bonus(void);
+
 #endif // SETTINGS_H

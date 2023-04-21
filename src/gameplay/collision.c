@@ -1,5 +1,4 @@
-#include "game/game.h"
-#include "gameplay/monster.h"
+#include "gameplay/collision.h"
 
 // Remove a monster at (x,y) in the given context.
 // Returns true if a monster was there.

@@ -106,3 +106,31 @@ bool settings_set_item_bonus(int n) {
     g_item_bonus = n;
     return true;
 }
+
+// -----------------------------------------------------------------------------
+// For testing
+// -----------------------------------------------------------------------------
+
+void settings_reset(void) {
+    g_maze_width        = MAZE_DEFAULT_WIDTH;
+    g_maze_height       = MAZE_DEFAULT_HEIGHT;
+    g_initial_shots     = INITIAL_SHOTS;
+    g_fps               = DEFAULT_FPS;
+    g_player_symbol     = DEFAULT_PLAYER_SYMBOL;
+    g_exit_symbol       = DEFAULT_EXIT_SYMBOL;
+    g_projectile_symbol = DEFAULT_PROJECTILE_SYMBOL;
+    g_monster_symbol    = DEFAULT_MONSTER_SYMBOL;
+    g_item_symbol       = DEFAULT_ITEM_SYMBOL;
+    g_item_bonus        = DEFAULT_ITEM_BONUS;
+}
+
+int  settings_get_width(void)            { return g_maze_width; }
+int  settings_get_height(void)           { return g_maze_height; }
+int  settings_get_initial_shots(void)    { return g_initial_shots; }
+int  settings_get_fps(void)              { return g_fps; }
+char settings_get_player_symbol(void)    { return (char)g_player_symbol; }
+char settings_get_exit_symbol(void)      { return (char)g_exit_symbol; }
+char settings_get_projectile_symbol(void){ return (char)g_projectile_symbol; }
+char settings_get_monster_symbol(void)   { return (char)g_monster_symbol; }
+char settings_get_item_symbol(void)      { return (char)g_item_symbol; }
+int  settings_get_item_bonus(void)       { return g_item_bonus; }
