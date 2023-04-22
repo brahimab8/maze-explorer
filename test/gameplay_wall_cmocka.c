@@ -5,8 +5,9 @@
 #include <stdlib.h> 
 
 #include "engine/maze.h"      // Cell
-#include "gameplay/wall.h"    // wall_destroy()
+#include "gameplay/wall.h"    // wall_destroy_cb()
 #include "engine/movement.h"  // Direction
+
 // Helper: make a 3×3 grid with all walls present
 static Cell **make_grid3(void) {
     int rows = 3, cols = 3;
@@ -26,11 +27,9 @@ static Cell **make_grid3(void) {
 static void test_wall_destroy_up(void **state) {
     (void)state;
     Cell **g = make_grid3();
-    // destroy the wall north of cell (1,1)
-    wall_destroy(g, 3, 3, 1, 1, DIR_UP);
-    // cell (1,1).wallN must be 0
+    // destroy the wall north of cell (1,1) using the callback
+    wall_destroy_cb(NULL, g, 3, 3, 1, 1, DIR_UP);
     assert_false(g[1][1].wallN);
-    // and its northern neighbor (0,1).wallS must also be 0
     assert_false(g[0][1].wallS);
     free(g[0]);
     free(g);
@@ -39,7 +38,7 @@ static void test_wall_destroy_up(void **state) {
 static void test_wall_destroy_down(void **state) {
     (void)state;
     Cell **g = make_grid3();
-    wall_destroy(g, 3, 3, 1, 1, DIR_DOWN);
+    wall_destroy_cb(NULL, g, 3, 3, 1, 1, DIR_DOWN);
     assert_false(g[1][1].wallS);
     assert_false(g[2][1].wallN);
     free(g[0]);
@@ -49,7 +48,7 @@ static void test_wall_destroy_down(void **state) {
 static void test_wall_destroy_left(void **state) {
     (void)state;
     Cell **g = make_grid3();
-    wall_destroy(g, 3, 3, 1, 1, DIR_LEFT);
+    wall_destroy_cb(NULL, g, 3, 3, 1, 1, DIR_LEFT);
     assert_false(g[1][1].wallW);
     assert_false(g[1][0].wallE);
     free(g[0]);
@@ -59,7 +58,7 @@ static void test_wall_destroy_left(void **state) {
 static void test_wall_destroy_right(void **state) {
     (void)state;
     Cell **g = make_grid3();
-    wall_destroy(g, 3, 3, 1, 1, DIR_RIGHT);
+    wall_destroy_cb(NULL, g, 3, 3, 1, 1, DIR_RIGHT);
     assert_false(g[1][1].wallE);
     assert_false(g[1][2].wallW);
     free(g[0]);
@@ -70,8 +69,8 @@ static void test_wall_destroy_oob(void **state) {
     (void)state;
     Cell **g = make_grid3();
     // destroying outside should be no-op and not crash
-    wall_destroy(g, 3, 3, -1, 1, DIR_LEFT);
-    wall_destroy(g, 3, 3, 1, 3, DIR_DOWN);
+    wall_destroy_cb(NULL, g, 3, 3, -1, 1, DIR_LEFT);
+    wall_destroy_cb(NULL, g, 3, 3, 1, 3, DIR_DOWN);
     // all walls remain intact
     for (int r = 0; r < 3; ++r)
       for (int c = 0; c < 3; ++c)

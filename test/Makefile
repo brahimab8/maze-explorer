@@ -35,9 +35,8 @@ WRAP := \
   -Wl,--wrap=save_game_slot \
   -Wl,--wrap=run_settings_menu \
   -Wl,--wrap=input_init \
-  -Wl,--wrap=input_poll \
   -Wl,--wrap=input_get_line \
-  -Wl,--wrap=free_maze
+  -Wl,--wrap=free_maze \
 
 # Tests exercising game_play also need draw_maze wrapped
 GAME_PLAY := \
@@ -46,15 +45,23 @@ GAME_PLAY := \
   game_menu_cmocka \
   maze_cmocka \
   settings_cmocka \
-  timer_cmocka
+  gameplay_play_cmocka 
+  # timer_cmocka
 
 $(addprefix $(BINDIR)/,$(GAME_PLAY)): WRAP += -Wl,--wrap=draw_maze
 
-# game_loop test also wraps game_init
-$(BINDIR)/game_loop_cmocka: WRAP += -Wl,--wrap=game_init
+# game_loop test also wraps game_init, monsters_init, and items_init
+$(BINDIR)/game_loop_cmocka: WRAP += \
+    -Wl,--wrap=game_init \
+    -Wl,--wrap=monsters_init \
+    -Wl,--wrap=items_init
 
 # player test also wraps can_step
 $(BINDIR)/gameplay_player_cmocka: WRAP += -Wl,--wrap=can_step
+# projectile test also wraps can_step
+$(BINDIR)/gameplay_projectile_cmocka: WRAP += -Wl,--wrap=can_step
+
+$(BINDIR)/save_load_cmocka: WRAP :=
 
 # Discover test sources → binaries
 TEST_SRCS := $(wildcard *_cmocka.c)
@@ -72,7 +79,7 @@ test: all
 
 # Pattern rule to build each test binary
 $(BINDIR)/%: %.c $(STUB_OBJ) $(CORE_OBJS) | $(BINDIR)
-	$(CC) $(CFLAGS) $< $(STUB_OBJ) $(CORE_OBJS) \
+	$(CC) $(CFLAGS) $< $(CORE_OBJS) $(STUB_OBJ) \
 	    $(WRAP) $(LDFLAGS) $(CMOCKA) \
 	    -o $@
 

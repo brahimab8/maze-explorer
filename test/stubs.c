@@ -10,9 +10,6 @@
 /* Persistence */
 #include "util/save_game.h"   // save_game_slot(), load_game_slot()
 
-/* Input */
-// #include "input/input.h"             // input_poll(), input_get_line()
-
 /* Engine & UI */
 #include "engine/maze.h"             // Cell, free_maze()
 #include "ui/maze_ui.h"              // MazeUI
@@ -40,7 +37,7 @@ int __wrap_run_menu(const char *t,const char*lbls[],int cnt) {
     return _next_choice;
 }
 
-char* __wrap_run_load_menu(void){
+char* __wrap_run_load_menu(UI *ui){ (void)ui; 
     return _next_slot ? strdup(_next_slot) : NULL;
 }
 
@@ -71,13 +68,10 @@ void __wrap_draw_maze(Cell **grid,
 }
 
 void __wrap_free_maze(Cell **g){ (void)g; }
-void __wrap_run_settings_menu(void){ }
-void __wrap_input_init(void){ }
-InputAction __wrap_input_poll(void){ return INP_SELECT; }
+void __wrap_run_settings_menu(UI *ui){(void)ui; }
 void __wrap_input_get_line(const char*p,char*b,size_t l){
     (void)p;(void)l; b[0]='\0';
 }
-
 
 //---Stub out game_init so frame_delay_ms never divides by zero
 void __wrap_game_init(GameContext *g,
@@ -105,4 +99,102 @@ void __wrap_game_init(GameContext *g,
 
     // Provide a dummy slot name
     g->slot = strdup("stub");
+}
+
+void __wrap_monsters_init(Monster *mons, int *count,
+                          int level, int rows, int cols) {
+    (void)mons;
+    (void)count;
+    (void)level;
+    (void)rows;
+    (void)cols;
+    *count = 0;
+}
+
+void __wrap_items_init(Item *items, int *count,
+                       int rows, int cols,
+                       int avoid_x, int avoid_y,
+                       char symbol) {
+    (void)items;
+    (void)count;
+    (void)rows;
+    (void)cols;
+    (void)avoid_x;
+    (void)avoid_y;
+    (void)symbol;
+    *count = 0;
+}
+
+
+/* -----------------------------------------------------------------------------
+   A tiny input‐queue + fallback default for InputAction
+   ----------------------------------------------------------------------------- */
+
+#define INPUT_Q_SIZE  32
+static InputAction _input_q[INPUT_Q_SIZE];
+static int         _q_head = 0, _q_tail = 0;
+
+// default action once the queue is drained
+static InputAction _default_input = INP_NONE;
+void set_default_input(InputAction a) {
+    _default_input = a;
+}
+
+void reset_input_queue(void) {
+    _q_head = _q_tail = 0;
+}
+
+void enqueue_input(InputAction a) {
+    int next = (_q_tail + 1) % INPUT_Q_SIZE;
+    if (next == _q_head) {
+        // drop oldest
+        _q_head = (next + 1) % INPUT_Q_SIZE;
+    }
+    _input_q[_q_tail] = a;
+    _q_tail = next;
+}
+
+InputAction __wrap_input_poll(void) {
+    if (_q_head != _q_tail) {
+        InputAction a = _input_q[_q_head];
+        _q_head = (_q_head + 1) % INPUT_Q_SIZE;
+        return a;
+    }
+    // queue empty → return our tests’ default
+    return _default_input;
+}
+
+// -----------------------------------------------------------------------------
+// Suppress waits & clear-screens
+// -----------------------------------------------------------------------------
+int __wrap_system(const char *cmd){
+    (void)cmd;
+    return 0;
+}
+
+typedef unsigned int useconds_t;
+
+int __wrap_usleep(useconds_t usec){
+    (void)usec;
+    return 0;
+}
+
+
+
+// gameplay tests stubs
+InputAction next_input = INP_NONE;
+void stub_clear_screen(void) {
+    /* no-op */
+}
+
+InputAction stub_poll_input(void) {
+    return next_input;
+}
+
+int stub_run_menu(const char *title, const char *labels[], int count) {
+    return __wrap_run_menu(title, labels, count);
+}
+
+void stub_sleep_ms(int ms) {
+    (void)ms;
 }

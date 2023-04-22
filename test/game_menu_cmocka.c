@@ -7,9 +7,7 @@
 #include <cmocka.h>
 
 #include "game/game.h"
-#include "ui/ui.h"
 #include "menu/main_menu.h"     /* for MAIN_CONTINUE, MAIN_NEW, etc. */
-// #include "input/input.h"         /* for InputAction, INP_SELECT */
 #include "util/save_game.h"     /* for save_game_slot() */
 
 /* Wrapper implementations from stubs.c */
