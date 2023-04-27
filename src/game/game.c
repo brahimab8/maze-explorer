@@ -7,6 +7,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 // local monster storage
 static Monster monsters[MAX_MONSTERS];
@@ -15,6 +16,38 @@ static int     monster_count = 0;
 // local item storage
 static Item     items[MAX_ITEMS];
 static int      item_count = 0;
+
+// Helper to display a message screen and wait for input
+static GameState show_message_screen(UI *ui,
+                                     GameState next_state,
+                                     size_t line_count,
+                                     ...)
+{
+    va_list args;
+    ui->clear_screen();
+
+    va_start(args, line_count);
+    for (size_t i = 0; i < line_count; ++i) {
+        const char *line = va_arg(args, const char *);
+        ui->print("%s\n", line);
+    }
+    va_end(args);
+
+    InputAction act = INP_NONE;
+    // wait until user presses Enter or 'q'
+    while (act != INP_SELECT && act != INP_QUIT) {
+        act = ui->poll_input();
+        ui->sleep_ms(20);
+    }
+
+    // if they hit 'q', exit the whole game
+    if (act == INP_QUIT) {
+        return STATE_EXIT;
+    }
+    // else (Enter) continue
+    return next_state;
+}
+
 
 static GameState setup_level(GameContext *g, UI *ui) {
     (void)ui;   // silence “unused parameter” warning
@@ -67,8 +100,8 @@ static GameState setup_level(GameContext *g, UI *ui) {
         items, &item_count,
         g->cfg.height,       // rows
         g->cfg.width,        // cols
-        /* avoid player */   0, 0,
-        /* symbol */        g->cfg.item_symbol
+        0, 0,                // avoid player at
+        g->cfg.item_symbol   // item symbol
     );
 
     // Push into UI layer
@@ -85,35 +118,55 @@ static GameState do_transition(GameContext *g, UI *ui) {
     free_maze(g->grid);
     g->grid = NULL;
 
-    int prev_level = g->maze.level;
+    int prev_level   = g->maze.level;
     double total_time = g->maze.time_secs;
     int bullets_left = g->maze.bullets;
-
     g->maze.level++;
 
-    // save progress
     ui->save_slot(g->slot, &g->maze,
                   g->cfg.height, g->cfg.width,
                   total_time);
 
-    ui->clear_screen();
+    char h1[64], h2[64], h3[64], h4[64];
+    snprintf(h1, sizeof h1, "=== Level %d Complete ===", prev_level);
+    snprintf(h2, sizeof h2,
+             "Time:      %02d:%02d.%d",
+             (int)(total_time/60), (int)total_time % 60,
+             (int)((total_time - (int)total_time)*10));
+    snprintf(h3, sizeof h3, "Bullets:   %d remaining", bullets_left);
+    snprintf(h4, sizeof h4, "Next Level: %d", g->maze.level);
 
-    // summary header
-    ui->print("=== Level %d Complete ===\n", prev_level);
-    ui->print("Time:      %02d:%02d.%d\n",
-              (int)(total_time/60),
-              (int)total_time % 60,
-              (int)((total_time - (int)total_time)*10));
-    ui->print("Bullets:   %d remaining\n", bullets_left);
-    ui->print("Next Level: %d\n\n", g->maze.level);
-    ui->print("Press Enter to start Level %d…\n", g->maze.level);
+    return show_message_screen(
+        ui,
+        STATE_SETUP_LEVEL,
+        6,
+        h1,
+        h2,
+        h3,
+        h4,
+        "",
+        "Press Enter to start next level or 'q' to quit"
+    );
+}
 
-    // wait until the user presses Enter
-    while (ui->poll_input() != INP_SELECT) {
-        ui->sleep_ms(20);
-    }
+static GameState do_game_over(GameContext *g, UI *ui) {
+    char o1[64], o2[64];
+    snprintf(o1, sizeof o1,
+             "Game Over! You reached level %d", g->maze.level);
+    snprintf(o2, sizeof o2,
+             "Total time: %02d:%02d",
+             (int)g->maze.time_secs/60,
+             (int)g->maze.time_secs%60);
 
-    return STATE_SETUP_LEVEL;
+    return show_message_screen(
+        ui,
+        STATE_MENU,
+        4,
+        o1,
+        o2,
+        "",
+        "Press Enter to return to menu or 'q' to quit"
+    );
 }
 
 void run_game(const GameSettings *initial_cfg, UI *ui) {
@@ -143,24 +196,13 @@ void run_game(const GameSettings *initial_cfg, UI *ui) {
           case STATE_TRANSITION:
             state = do_transition(&g, ui);
             break;
-        
-          case STATE_GAME_OVER:
-            ui->clear_screen();
-            ui->print("Game Over!\nYou reached level %d total time: %02d:%02d\nPress any key to return to menu…",
-                    g.maze.level,
-                    (int)g.maze.time_secs/60,
-                    (int)g.maze.time_secs%60);
-            g.grid = NULL;
 
-            while (ui->poll_input() == INP_NONE) {
-                ui->sleep_ms(50);
-            }
-            state = STATE_MENU;
+          case STATE_GAME_OVER:
+            state = do_game_over(&g, ui);
             break;
 
           case STATE_EXIT:
-            break;                 
-
+            break;
 
           default:
             state = STATE_EXIT;
@@ -172,17 +214,12 @@ void run_game(const GameSettings *initial_cfg, UI *ui) {
 }
 
 void game_setup_grid(GameContext *g) {
-    // Clear any existing grid
     if (g->grid) {
         free_maze(g->grid);
         g->grid = NULL;
     }
-
-    // Allocate & carve a new maze
     init_maze(g->cfg.height, g->cfg.width, &g->grid);
-    carve   (g->grid, g->cfg.height, g->cfg.width, 0, 0);
-
-    // Reset ammo and timer
+    carve(g->grid, g->cfg.height, g->cfg.width, 0, 0);
     g->maze.bullets = g->cfg.initial_shots;
     if (g->maze.time_secs > 0.0) {
         timer_set_start_time(g->maze.time_secs);
@@ -197,4 +234,3 @@ void game_clear_grid(GameContext *g) {
         g->grid = NULL;
     }
 }
-

@@ -10,6 +10,16 @@ void game_init(GameContext *g,
                const GameSettings *initial_cfg,
                UI *ui)
 {
+    
+    ui->print(
+    "    __  ___                   ______           __                    \n"
+    "   /  |/  /____ ____ ___     / ____/  __ ____ / /____ _____ __  _____\n"
+    "  / /|_/ / __  /_  // _ |   / __/ | |/ / __  / / __  / ___/ _ |/ ___/\n"
+    " / /  / / /_/ / / //  __/  / /___ > < / /_/ / / /_/ / /  /  __/ /    \n"
+    "/_/  /_/_____/ /___|___/  /_____/__/|/ ____/_/_____/_/  /____/_/     \n"
+    "                                    /_/                              \n\n"
+    );
+
     // copy settings, clear grid
     g->cfg = *initial_cfg;
     // start out at zero / empty
@@ -28,7 +38,6 @@ void game_init(GameContext *g,
     g->maze.level = 1;
     g->maze.bullets = g->cfg.initial_shots;
     g->maze.time_secs = 0.0;
-
     g->frame_delay_ms = 1000 / g->cfg.fps;
 
     // // Pull the dynamic symbols straight from the config
