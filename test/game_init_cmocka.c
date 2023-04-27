@@ -16,6 +16,11 @@ static void stub_seed_rng(unsigned s) {
     (void)s;
 }
 
+static void stub_print(const char *fmt, ...)
+{
+    (void)fmt;
+}
+
 static void stub_read_line(const char *prompt, char *buf, int len) {
     (void)prompt; (void)len;
     // simulate user pressing Enter immediately (empty name)
@@ -56,6 +61,7 @@ static void test_game_init_defaults(void **state) {
     };
 
     UI ui = {0};
+    ui.print     = stub_print;
     ui.seed_rng  = stub_seed_rng;
     ui.read_line = stub_read_line;
     ui.save_slot = stub_save_slot;
@@ -88,6 +94,7 @@ static void test_game_init_defaults(void **state) {
 static void make_fake_ui(UI *ui) {
     memset(ui, 0, sizeof *ui);
     ui->clear_screen = stub_clear_screen;
+    ui->print        = stub_print; 
     ui->seed_rng   = stub_seed_rng;
     ui->read_line  = stub_read_line;
     ui->save_slot  = stub_save_slot;
