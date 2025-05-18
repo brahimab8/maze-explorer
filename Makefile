@@ -65,7 +65,7 @@ coverage:
 	lcov --capture --directory . --output-file coverage.info
 
 	@echo "=== Filtering out system and tests ==="
-	lcov --remove coverage.info '/usr/*' '*/test/*' --output-file coverage.info
+	lcov --remove coverage.info '*/test/*' --output-file coverage.info
 
 	@echo "=== Generating HTML report ==="
 	genhtml coverage.info --output-directory coverage-report
