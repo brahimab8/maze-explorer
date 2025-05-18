@@ -93,7 +93,7 @@ ItemBonus=2
 
 ## Demo
 
-<!-- [Live demo on GitHub Pages](https://brahimab8.github.io/maze-explorer/) *(TO-DO)* -->
+![Maze Explorer Demo](maze_explorer_demo.gif)
 
 ## License
 
