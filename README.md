@@ -1,60 +1,100 @@
+[![Build Status](https://github.com/brahimab8/maze-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/brahimab8/maze-explorer/actions)
+[![Coverage Status](https://coveralls.io/repos/github/brahimab8/maze-explorer/badge.svg)](https://coveralls.io/github/brahimab8/maze-explorer)
+[![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?repo=brahimab8/maze-explorer)
+
 # Maze Explorer
 
-Maze Explorer is a terminal‑based C application: navigate a procedurally generated maze, collect extra projectiles, and fight/evade roaming monsters.
+Maze Explorer is a **terminal-based C application** that challenges you to navigate procedurally generated mazes, collect bonus projectiles, and fight/avoid roaming monsters across multiple levels of increasing difficulty.
 
-## Roadmap
+## Features
 
-1. Maze Generation  
-2. Player Input & Rendering  
-3. Projectile & Pickup System  
-4. Monster Movement  
-5. Level Progression & Save/Load  
-6. Timing & Best‑time Tracking
-7. Persistent Configuration 
-8. Unit Testing & Coverage
+- **Procedural Maze Generation**  
+  A recursive-backtracking carver that generates a new, unique maze layout on each round.
 
----
+- **Configurable Game Parameters**  
+  Adjust maze size, initial ammo, symbols, frame rate and more via a persistent config file or directly through the in-game settings menu.
 
-## Technical Overview
+- **Multi-Level Progression**  
+  Clear each maze and advance to harder levels with more monsters.
 
-- **Language**: C (ISO C11)  
-- **Build**: Make, GCC/Clang  
-- **Maze**: Recursive backtracker  
-- **I/O**: Console & file  
-- **Timing**: Sub‑second precision  
-- **Tests**: CMocka  
-- **Coverage**: lcov + genhtml via `make coverage`
+- **Save & Load**  
+  Auto-save between levels to preserve progress.
 
----
+- **Real-Time Gameplay**  
+  Shoot projectiles, pick up bonus items, and track elapsed game time.
+
+- **Unit Tested & Coverage**  
+  Comprehensive CMocka tests with lcov integration.
+## Tech Stack
+
+- **Language**: ISO C11  
+- **Build**: GNU Make, GCC/Clang  
+- **Testing**: CMocka  
+- **Coverage**: lcov   
+- **Configuration**: Plain-text key/value file + in-game menu  
+- **Persistence**: Binary save files  
 
 ## Getting Started
 
-On a Linux system with gcc and make installed, first clone the repository, then build and run the game:
+### Prerequisites
+
+- Linux or macOS  
+- `gcc` or `clang`  
+- `make`  
+- `lcov` (for coverage)
+
+### Installation
 
 ```bash
+git clone https://github.com/brahimab8/maze-explorer.git
+cd maze-explorer
 make
+````
+
+### Running
+
+```bash
 ./maze_explorer
 ```
 
-## Running Tests
-Unit tests are written with CMocka. To build and run them:
+### Configuration
 
-```bash
-make test
+Edit `persistent.cfg` (created on first run) or use the **Settings** option from the in-game menu:
+
+```ini
+# Maze Explorer Configuration
+Width=20
+Height=10
+InitialShots=3
+FPS=30
+PlayerSymbol=@
+ExitSymbol=X
+ProjectileSymbol=*
+MonsterSymbol=M
+ItemSymbol=.
+ItemBonus=2
 ```
 
-## Generating Coverage Reports
-This will rebuild both the library and tests with coverage instrumentation, run all tests, then generate an HTML report in coverage-report/:
+## Testing & Coverage
 
-```bash
-make coverage
-```
+* **Run all tests**
 
-Open coverage-report/index.html in the browser to inspect the coverage results.
+  ```bash
+  make test
+  ```
 
----
+* **Generate coverage report**
+
+  ```bash
+  make coverage
+  ```
+
+  Open `coverage-report/index.html` in browser.
+
+## Demo
+
+<!-- [Live demo on GitHub Pages](https://brahimab8.github.io/maze-explorer/) *(TO-DO)* -->
 
 ## License
 
 This project is released under the [MIT License](LICENSE).
-

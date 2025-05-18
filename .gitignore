@@ -13,3 +13,5 @@ maze_explorer
 *.gcda
 *.gcno
 
+# others
+persistent.cfg
