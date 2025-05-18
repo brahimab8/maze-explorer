@@ -1,5 +1,5 @@
 [![Build Status](https://github.com/brahimab8/maze-explorer/actions/workflows/ci.yml/badge.svg)](https://github.com/brahimab8/maze-explorer/actions)
-[![Coverage Status](https://coveralls.io/repos/github/brahimab8/maze-explorer/badge.svg)](https://coveralls.io/github/brahimab8/maze-explorer)
+[![Coverage Status](https://codecov.io/gh/brahimab8/maze-explorer/branch/main/graph/badge.svg)](https://codecov.io/gh/brahimab8/maze-explorer)
 [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?repo=brahimab8/maze-explorer)
 
 # Maze Explorer
