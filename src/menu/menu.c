@@ -13,7 +13,8 @@ MenuOption run_menu(const char *title, const char *labels[], int count) {
         for (int i = 0; i < count; ++i) {
             printf(" %c %s\n", i == sel ? '>' : ' ', labels[i]);
         }
-        puts("\nUse W/S to move; Enter to select; P=Play, Q=Quit.");
+        puts("\nControls: [WASD/Arrows]=Move  [Enter]=Select  [Space]=Shoot\n"
+            "          [P]=Play/Pause      [Q]=Quit");
 
         InputAction act = input_poll();
         if (act == INP_UP)       sel = (sel - 1 + count) % count;
