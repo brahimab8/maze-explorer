@@ -62,6 +62,7 @@ static void test_game_init_defaults(void **state) {
 
     UI ui = {0};
     ui.print     = stub_print;
+    ui.clear_screen = stub_clear_screen;
     ui.seed_rng  = stub_seed_rng;
     ui.read_line = stub_read_line;
     ui.save_slot = stub_save_slot;
