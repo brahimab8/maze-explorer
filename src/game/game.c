@@ -158,6 +158,12 @@ static GameState do_game_over(GameContext *g, UI *ui) {
              (int)g->maze.time_secs/60,
              (int)g->maze.time_secs%60);
 
+    // clear the maze grid after game over
+    if (g->grid) {
+        free_maze(g->grid);
+        g->grid = NULL;
+    }
+
     return show_message_screen(
         ui,
         STATE_MENU,
