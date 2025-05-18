@@ -11,6 +11,8 @@ void game_init(GameContext *g,
                UI *ui)
 {
     
+    ui->clear_screen();
+
     ui->print(
     "    __  ___                   ______           __                    \n"
     "   /  |/  /____ ____ ___     / ____/  __ ____ / /____ _____ __  _____\n"
